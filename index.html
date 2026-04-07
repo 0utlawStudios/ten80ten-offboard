@@ -296,6 +296,62 @@
     .kbd-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; font-size: 13px; color: var(--text-1); }
     .kbd-key { font-family: var(--mono); font-size: 11px; background: var(--bg-0); border: 1px solid var(--border-1); border-radius: 4px; padding: 2px 7px; color: var(--text-2); }
 
+    /* === Reports === */
+    .rpt-metrics { display: flex; align-items: flex-start; gap: 0; padding: 0 0 32px; }
+    .rpt-metric { flex: 1; padding: 0 24px; }
+    .rpt-metric:not(:last-child) { border-right: 1px solid var(--border-0); }
+    .rpt-metric-num { font-family: var(--mono); font-size: 32px; font-weight: 600; color: var(--text-0); line-height: 1; letter-spacing: -0.04em; }
+    .rpt-metric-label { font-size: 10px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 6px; }
+
+    .rpt-section { margin-bottom: 40px; }
+    .rpt-section-label { font-size: 10px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 16px; }
+
+    .rpt-bar-chart { position: relative; }
+    .rpt-bar-chart svg { display: block; width: 100%; }
+    .rpt-bar-chart svg text { font-family: var(--mono); }
+    .rpt-bar-chart svg .bar-rect { fill: var(--accent); opacity: 0.7; transition: opacity 0.1s; cursor: default; }
+    .rpt-bar-chart svg .bar-rect:hover { opacity: 1; }
+    .rpt-bar-chart svg .axis-line { stroke: var(--border-0); stroke-width: 1; }
+    .rpt-bar-chart svg .axis-text { fill: var(--text-3); font-size: 11px; }
+    .rpt-bar-chart svg .bar-val { fill: var(--text-2); font-size: 11px; font-weight: 500; }
+    .rpt-bar-chart svg .grid-line { stroke: var(--border-0); stroke-width: 1; stroke-dasharray: 3 3; }
+
+    .rpt-hbar-row { display: flex; align-items: center; gap: 12px; padding: 6px 0; }
+    .rpt-hbar-label { width: 160px; flex-shrink: 0; font-size: 13px; font-weight: 500; color: var(--text-1); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .rpt-hbar-track { flex: 1; height: 18px; background: var(--bg-2); border-radius: 3px; overflow: hidden; position: relative; }
+    .rpt-hbar-fill { height: 100%; background: var(--accent); opacity: 0.7; border-radius: 3px; transition: opacity 0.1s; min-width: 2px; }
+    .rpt-hbar-fill:hover { opacity: 1; }
+    .rpt-hbar-fill.green { background: var(--green); }
+    .rpt-hbar-fill.gold { background: var(--gold); }
+    .rpt-hbar-fill.blue { background: var(--blue); }
+    .rpt-hbar-count { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--text-2); width: 28px; text-align: right; flex-shrink: 0; }
+
+    .rpt-donut-wrap { display: flex; align-items: flex-start; gap: 40px; }
+    .rpt-donut { position: relative; width: 200px; height: 200px; flex-shrink: 0; }
+    .rpt-donut-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+    .rpt-donut-center-num { font-family: var(--mono); font-size: 28px; font-weight: 600; color: var(--text-0); line-height: 1; }
+    .rpt-donut-center-label { font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
+    .rpt-legend { display: flex; flex-direction: column; gap: 8px; padding-top: 8px; }
+    .rpt-legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: var(--text-1); }
+    .rpt-legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+    .rpt-legend-count { font-family: var(--mono); font-size: 12px; color: var(--text-3); margin-left: auto; }
+
+    .rpt-step-bars .rpt-hbar-label { width: 200px; font-size: 12px; color: var(--text-2); }
+    .rpt-step-bars .rpt-hbar-count { width: 48px; font-size: 11px; }
+
+    .rpt-timeline { display: flex; flex-direction: column; gap: 0; }
+    .rpt-tl-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border-0); }
+    .rpt-tl-item:last-child { border-bottom: none; }
+    .rpt-tl-init { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 10px; background: var(--bg-3); color: var(--text-1); flex-shrink: 0; }
+    .rpt-tl-info { flex: 1; min-width: 0; }
+    .rpt-tl-name { font-size: 13px; font-weight: 600; color: var(--text-0); }
+    .rpt-tl-sub { font-size: 11px; color: var(--text-3); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .rpt-tl-right { text-align: right; flex-shrink: 0; }
+    .rpt-tl-date { font-family: var(--mono); font-size: 11px; color: var(--text-2); }
+    .rpt-tl-dur { font-family: var(--mono); font-size: 11px; color: var(--text-3); margin-top: 1px; }
+
+    .rpt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+
     /* === Responsive === */
 
     /* Tablet */
@@ -325,6 +381,12 @@
       .board-col { min-width: 200px; width: 200px; }
       .kbd-overlay { display: none !important; }
 
+      /* Reports */
+      .rpt-grid { grid-template-columns: 1fr; gap: 0; }
+      .rpt-hbar-label { width: 120px; font-size: 12px; }
+      .rpt-step-bars .rpt-hbar-label { width: 160px; font-size: 11px; }
+      .rpt-donut-wrap { gap: 24px; }
+
       /* Table: horizontal scroll with card-like feel */
       .tbl-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -16px; padding: 0 16px; }
       .tbl { min-width: 700px; }
@@ -344,6 +406,26 @@
       .btn { padding: 8px 12px; font-size: 11px; }
       .btn svg { width: 12px; height: 12px; }
       .view-toggle-group { order: -1; }
+
+      /* Reports mobile */
+      .rpt-metrics { flex-wrap: wrap; gap: 20px 0; }
+      .rpt-metric { flex: 0 0 50%; padding: 0 16px; }
+      .rpt-metric:nth-child(odd) { padding-left: 0; }
+      .rpt-metric:nth-child(even) { padding-right: 0; }
+      .rpt-metric:not(:last-child) { border-right: none; }
+      .rpt-metric:nth-child(odd):not(:nth-last-child(-n+2)) { border-bottom: 1px solid var(--border-0); padding-bottom: 16px; }
+      .rpt-metric:nth-child(even):not(:nth-last-child(-n+2)) { border-bottom: 1px solid var(--border-0); padding-bottom: 16px; }
+      .rpt-metric:nth-child(n+3) { padding-top: 16px; }
+      .rpt-metric-num { font-size: 26px; }
+      .rpt-donut-wrap { flex-direction: column; align-items: center; gap: 20px; }
+      .rpt-donut { width: 160px; height: 160px; }
+      .rpt-donut-center-num { font-size: 22px; }
+      .rpt-legend { flex-direction: row; flex-wrap: wrap; gap: 6px 16px; }
+      .rpt-hbar-label { width: 100px; font-size: 11px; }
+      .rpt-step-bars .rpt-hbar-label { width: 130px; font-size: 10px; }
+      .rpt-grid { grid-template-columns: 1fr; gap: 0; }
+      .rpt-bar-chart { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .rpt-tl-sub { font-size: 10px; }
 
       /* Hide table, show mobile cards */
       .tbl-scroll { display: none; }
@@ -451,6 +533,10 @@
       <button class="sb-item active" data-view="dashboard" onclick="go('dashboard')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
         Dashboard
+      </button>
+      <button class="sb-item" data-view="reports" onclick="go('reports')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+        Reports
       </button>
       <button class="sb-item" data-view="history" onclick="go('history')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
@@ -666,6 +752,19 @@
       </div>
     </section>
 
+    <!-- ===== Reports ===== -->
+    <section id="v-reports" class="view">
+      <div class="page-header">
+        <div class="page-header-row">
+          <h1 class="page-title">Reports</h1>
+        </div>
+        <div style="padding-bottom:24px;border-bottom:1px solid var(--border-0);margin-bottom:24px">
+          <span style="font-size:12px;color:var(--text-3)">Analytics computed from all offboarding records</span>
+        </div>
+      </div>
+      <div class="content" id="reportsContent"></div>
+    </section>
+
     <!-- ===== History ===== -->
     <section id="v-history" class="view">
       <div class="page-header">
@@ -713,6 +812,7 @@
     <div class="kbd-row"><span>Go back</span><span class="kbd-key">Esc</span></div>
     <div class="kbd-row"><span>Show shortcuts</span><span class="kbd-key">?</span></div>
     <div class="kbd-row"><span>Dashboard</span><span class="kbd-key">G then D</span></div>
+    <div class="kbd-row"><span>Reports</span><span class="kbd-key">G then R</span></div>
     <div class="kbd-row"><span>History</span><span class="kbd-key">G then H</span></div>
     <div style="margin-top:14px;text-align:right"><button class="btn btn-ghost" onclick="document.getElementById('kbdOverlay').classList.remove('show')">Close</button></div>
   </div>
@@ -1078,6 +1178,7 @@ function go(view, param) {
 
   if (view === 'dashboard') { window.location.hash = '#dashboard'; }
   else if (view === 'new') { window.location.hash = '#new'; }
+  else if (view === 'reports') { window.location.hash = '#reports'; }
   else if (view === 'history') { window.location.hash = '#history'; }
   else if (view === 'detail') { window.location.hash = '#detail/' + param; }
 }
@@ -1103,6 +1204,10 @@ function route() {
     document.getElementById('v-detail').classList.add('active');
     currentDetailId = param;
     renderDetail(param);
+  } else if (view === 'reports') {
+    document.getElementById('v-reports').classList.add('active');
+    document.querySelector('[data-view="reports"]')?.classList.add('active');
+    renderReports();
   } else if (view === 'history') {
     document.getElementById('v-history').classList.add('active');
     document.querySelector('[data-view="history"]')?.classList.add('active');
@@ -1667,6 +1772,257 @@ function resendDocusign(id) {
 }
 
 // ===================================================================
+// REPORTS
+// ===================================================================
+function renderReports() {
+  const completed = data.filter(o => o.status === 'completed');
+  const all = data;
+
+  // --- 1. Key Metrics ---
+  const totalOffboarded = completed.length;
+
+  // Avg duration: createdAt to payReleased date
+  let totalDays = 0;
+  let countDays = 0;
+  completed.forEach(ob => {
+    const start = ob.createdAt;
+    const end = ob.steps.payReleased.date;
+    if (start && end) {
+      const d1 = new Date(start + 'T00:00:00');
+      const d2 = new Date(end + 'T00:00:00');
+      const diff = Math.round((d2 - d1) / 86400000);
+      if (diff >= 0) { totalDays += diff; countDays++; }
+    }
+  });
+  const avgDuration = countDays > 0 ? (totalDays / countDays).toFixed(1) : '0';
+
+  // Most active client
+  const clientCounts = {};
+  all.forEach(ob => { clientCounts[ob.client] = (clientCounts[ob.client] || 0) + 1; });
+  const clientEntries = Object.entries(clientCounts).sort((a, b) => b[1] - a[1]);
+  const topClient = clientEntries.length > 0 ? clientEntries[0][0] : 'N/A';
+
+  // Busiest month
+  const monthCounts = {};
+  completed.forEach(ob => {
+    const d = ob.steps.payReleased.date || ob.createdAt;
+    if (d) {
+      const dt = new Date(d + 'T00:00:00');
+      const key = dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0');
+      const label = dt.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+      if (!monthCounts[key]) monthCounts[key] = { count: 0, label: label };
+      monthCounts[key].count++;
+    }
+  });
+  const monthEntries = Object.entries(monthCounts).sort((a, b) => b[1].count - a[1].count);
+  const busiestMonth = monthEntries.length > 0 ? monthEntries[0][1].label : 'N/A';
+
+  // --- 2. Offboardings Per Month (SVG Bar Chart) ---
+  const monthData = Object.entries(monthCounts)
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([key, val]) => ({ key, label: val.label.split(' ')[0], fullLabel: val.label, count: val.count }));
+
+  const maxMonthCount = Math.max(...monthData.map(m => m.count), 1);
+  const chartW = Math.max(monthData.length * 56, 320);
+  const chartH = 180;
+  const chartPadL = 32;
+  const chartPadR = 16;
+  const chartPadT = 16;
+  const chartPadB = 28;
+  const plotW = chartW - chartPadL - chartPadR;
+  const plotH = chartH - chartPadT - chartPadB;
+  const barW = Math.min(28, (plotW / monthData.length) * 0.6);
+  const barGap = plotW / monthData.length;
+
+  // Y-axis gridlines
+  const yTicks = [];
+  const yStep = maxMonthCount <= 4 ? 1 : Math.ceil(maxMonthCount / 4);
+  for (let i = 0; i <= maxMonthCount; i += yStep) yTicks.push(i);
+  if (yTicks[yTicks.length - 1] < maxMonthCount) yTicks.push(maxMonthCount);
+
+  let svgBars = '';
+  // Grid lines
+  yTicks.forEach(tick => {
+    const y = chartPadT + plotH - (tick / maxMonthCount) * plotH;
+    svgBars += `<line class="grid-line" x1="${chartPadL}" y1="${y}" x2="${chartW - chartPadR}" y2="${y}"/>`;
+    svgBars += `<text class="axis-text" x="${chartPadL - 8}" y="${y + 4}" text-anchor="end">${tick}</text>`;
+  });
+  // Baseline
+  svgBars += `<line class="axis-line" x1="${chartPadL}" y1="${chartPadT + plotH}" x2="${chartW - chartPadR}" y2="${chartPadT + plotH}"/>`;
+
+  // Bars
+  monthData.forEach((m, i) => {
+    const x = chartPadL + i * barGap + (barGap - barW) / 2;
+    const barH = (m.count / maxMonthCount) * plotH;
+    const y = chartPadT + plotH - barH;
+    svgBars += `<rect class="bar-rect" x="${x}" y="${y}" width="${barW}" height="${barH}" rx="2"><title>${m.fullLabel}: ${m.count}</title></rect>`;
+    svgBars += `<text class="bar-val" x="${x + barW / 2}" y="${y - 5}" text-anchor="middle">${m.count}</text>`;
+    svgBars += `<text class="axis-text" x="${x + barW / 2}" y="${chartPadT + plotH + 16}" text-anchor="middle">${m.label}</text>`;
+  });
+
+  const barChartSvg = `<svg viewBox="0 0 ${chartW} ${chartH}" width="${chartW}" height="${chartH}" xmlns="http://www.w3.org/2000/svg">${svgBars}</svg>`;
+
+  // --- 3. By Client (Horizontal Bars) ---
+  const maxClientCount = clientEntries.length > 0 ? clientEntries[0][1] : 1;
+  const clientBarsHtml = clientEntries.map(([name, count]) => {
+    const pct = (count / maxClientCount) * 100;
+    return `<div class="rpt-hbar-row">
+      <div class="rpt-hbar-label">${name}</div>
+      <div class="rpt-hbar-track"><div class="rpt-hbar-fill" style="width:${pct}%"></div></div>
+      <div class="rpt-hbar-count">${count}</div>
+    </div>`;
+  }).join('');
+
+  // --- 4. By Reason (Donut Chart) ---
+  const reasonCounts = {};
+  all.forEach(ob => {
+    const r = ob.reason || 'Unknown';
+    reasonCounts[r] = (reasonCounts[r] || 0) + 1;
+  });
+  const reasonEntries = Object.entries(reasonCounts).sort((a, b) => b[1] - a[1]);
+  const totalReasons = all.length;
+  const reasonColors = ['var(--accent)', 'var(--gold)', 'var(--green)', 'var(--blue)', 'var(--text-3)'];
+
+  let conicParts = [];
+  let cumPct = 0;
+  reasonEntries.forEach(([reason, count], i) => {
+    const pct = (count / totalReasons) * 100;
+    const color = reasonColors[i % reasonColors.length];
+    conicParts.push(`${color} ${cumPct}% ${cumPct + pct}%`);
+    cumPct += pct;
+  });
+  const conicGrad = `conic-gradient(${conicParts.join(', ')})`;
+
+  const legendHtml = reasonEntries.map(([reason, count], i) => {
+    const color = reasonColors[i % reasonColors.length];
+    return `<div class="rpt-legend-item">
+      <div class="rpt-legend-dot" style="background:${color}"></div>
+      <span>${reason}</span>
+      <span class="rpt-legend-count">${count}</span>
+    </div>`;
+  }).join('');
+
+  // --- 5. Average Duration by Step ---
+  const stepPairs = [
+    { from: 'initiated', to: 'notified', label: 'Initiated \u2192 Notified' },
+    { from: 'notified', to: 'callScheduled', label: 'Notified \u2192 Call Scheduled' },
+    { from: 'callScheduled', to: 'certSigned', label: 'Call Scheduled \u2192 Cert Signed' },
+    { from: 'certSigned', to: 'accessRevoked', label: 'Cert Signed \u2192 Access Revoked' },
+    { from: 'accessRevoked', to: 'payReleased', label: 'Access Revoked \u2192 Pay Released' }
+  ];
+
+  const stepAvgs = stepPairs.map(pair => {
+    let sum = 0;
+    let cnt = 0;
+    completed.forEach(ob => {
+      const d1 = ob.steps[pair.from].date;
+      const d2 = ob.steps[pair.to].date;
+      if (d1 && d2) {
+        const diff = Math.round((new Date(d2 + 'T00:00:00') - new Date(d1 + 'T00:00:00')) / 86400000);
+        if (diff >= 0) { sum += diff; cnt++; }
+      }
+    });
+    return { label: pair.label, avg: cnt > 0 ? (sum / cnt) : 0 };
+  });
+  const maxStepAvg = Math.max(...stepAvgs.map(s => s.avg), 1);
+
+  const stepBarsHtml = stepAvgs.map(s => {
+    const pct = (s.avg / maxStepAvg) * 100;
+    const colorClass = s.avg <= 1 ? 'green' : s.avg >= 4 ? '' : 'gold';
+    return `<div class="rpt-hbar-row">
+      <div class="rpt-hbar-label">${s.label}</div>
+      <div class="rpt-hbar-track"><div class="rpt-hbar-fill ${colorClass}" style="width:${pct}%"></div></div>
+      <div class="rpt-hbar-count">${s.avg.toFixed(1)}d</div>
+    </div>`;
+  }).join('');
+
+  // --- 6. Recent Offboardings Timeline ---
+  const recent = completed
+    .map(ob => {
+      const start = ob.createdAt;
+      const end = ob.steps.payReleased.date;
+      let dur = 0;
+      if (start && end) {
+        dur = Math.round((new Date(end + 'T00:00:00') - new Date(start + 'T00:00:00')) / 86400000);
+      }
+      return { ...ob, duration: dur, completedDate: end || start };
+    })
+    .sort((a, b) => b.completedDate.localeCompare(a.completedDate))
+    .slice(0, 10);
+
+  const timelineHtml = recent.map(ob => {
+    return `<div class="rpt-tl-item" style="cursor:pointer" onclick="go('detail',${ob.id})">
+      <div class="rpt-tl-init">${initials(ob.vaName)}</div>
+      <div class="rpt-tl-info">
+        <div class="rpt-tl-name">${ob.vaName}</div>
+        <div class="rpt-tl-sub">${ob.client} \u00b7 ${ob.role}</div>
+      </div>
+      <div class="rpt-tl-right">
+        <div class="rpt-tl-date">${fmtDate(ob.completedDate)}</div>
+        <div class="rpt-tl-dur">${ob.duration}d</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // --- Assemble ---
+  document.getElementById('reportsContent').innerHTML = `
+    <div class="rpt-metrics">
+      <div class="rpt-metric">
+        <div class="rpt-metric-num">${totalOffboarded}</div>
+        <div class="rpt-metric-label">Total Offboarded</div>
+      </div>
+      <div class="rpt-metric">
+        <div class="rpt-metric-num">${avgDuration}<span style="font-size:16px;color:var(--text-3);font-weight:400">d</span></div>
+        <div class="rpt-metric-label">Avg Duration</div>
+      </div>
+      <div class="rpt-metric">
+        <div class="rpt-metric-num" style="font-size:18px;line-height:1.6">${topClient}</div>
+        <div class="rpt-metric-label">Most Active Client</div>
+      </div>
+      <div class="rpt-metric">
+        <div class="rpt-metric-num" style="font-size:20px;line-height:1.4">${busiestMonth}</div>
+        <div class="rpt-metric-label">Busiest Month</div>
+      </div>
+    </div>
+
+    <div class="rpt-section">
+      <div class="rpt-section-label">Offboardings Per Month</div>
+      <div class="rpt-bar-chart">${barChartSvg}</div>
+    </div>
+
+    <div class="rpt-grid">
+      <div class="rpt-section">
+        <div class="rpt-section-label">By Client</div>
+        ${clientBarsHtml}
+      </div>
+      <div class="rpt-section">
+        <div class="rpt-section-label">By Reason</div>
+        <div class="rpt-donut-wrap">
+          <div class="rpt-donut" style="background:${conicGrad};border-radius:50%">
+            <div style="position:absolute;inset:25%;background:var(--bg-0);border-radius:50%"></div>
+            <div class="rpt-donut-center">
+              <div class="rpt-donut-center-num">${totalReasons}</div>
+              <div class="rpt-donut-center-label">Total</div>
+            </div>
+          </div>
+          <div class="rpt-legend">${legendHtml}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rpt-section rpt-step-bars">
+      <div class="rpt-section-label">Avg Duration by Step</div>
+      ${stepBarsHtml}
+    </div>
+
+    <div class="rpt-section">
+      <div class="rpt-section-label">Recent Offboardings</div>
+      <div class="rpt-timeline">${timelineHtml}</div>
+    </div>
+  `;
+}
+
+// ===================================================================
 // HISTORY
 // ===================================================================
 function renderHistory() {
@@ -1875,6 +2231,7 @@ document.addEventListener('keydown', (e) => {
 
   if (Date.now() - lastKeyG < 800) {
     if (e.key === 'd' || e.key === 'D') { go('dashboard'); lastKeyG = 0; return; }
+    if (e.key === 'r' || e.key === 'R') { go('reports'); lastKeyG = 0; return; }
     if (e.key === 'h' || e.key === 'H') { go('history'); lastKeyG = 0; return; }
   }
 });
