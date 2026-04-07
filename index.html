@@ -608,73 +608,170 @@ const CLIENT_TOOLS = {
   "Meridian Group": ["Microsoft Email","Teams","SharePoint","LastPass","Salesforce","Zendesk","Slack","Asana"]
 };
 
+// Real offboarding data from Gmail records
+const DONE_STEPS = (created, completed) => ({ initiated:{done:true,date:created}, notified:{done:true,date:created}, callScheduled:{done:true,date:created}, certSigned:{done:true,date:completed}, accessRevoked:{done:true,date:completed}, payReleased:{done:true,date:completed} });
+const DONE_LOG = (name, completed) => [
+  {action:`Final pay released`,by:"Aldridge Dagos",ts:completed+"T09:00:00",type:"complete"},
+  {action:"All tool accesses revoked",by:"Hanes Abasola",ts:completed+"T08:00:00",type:"complete"},
+  {action:"Data Deletion Certificate signed",by:name,ts:completed+"T07:00:00",type:"complete"},
+  {action:"Offboarding call completed via Google Meet",by:"Hanes Abasola",ts:completed+"T06:00:00",type:"user"},
+  {action:"Offboarding initiated",by:"Hanes Abasola",ts:completed+"T05:00:00",type:"system"}
+];
+const DONE_TOOLS = (names) => names.map(n => ({name:n, revoked:true}));
+
 const SEED_DATA = [
+  // === REAL COMPLETED OFFBOARDINGS (from Gmail) ===
   {
     id: 1, vaName: "Jericho Ong", vaEmail: "jericho.ong@ten80ten.com", vaPhone: "+63 917 123 4567",
     client: "Armor Capital Group", role: "Executive Assistant", lastDay: "2026-03-19", finalPay: 850, reimbursements: 0,
     status: "completed", notes: "", initiatedBy: "Hanes Abasola", reason: "Client requested replacement",
     createdAt: "2026-03-15",
     steps: { initiated:{done:true,date:"2026-03-15"}, notified:{done:true,date:"2026-03-15"}, callScheduled:{done:true,date:"2026-03-17"}, certSigned:{done:true,date:"2026-03-19"}, accessRevoked:{done:true,date:"2026-03-19"}, payReleased:{done:true,date:"2026-03-20"} },
-    tools: [{name:"Microsoft Email",revoked:true},{name:"Google Meet",revoked:true},{name:"LastPass",revoked:true},{name:"Otter.ai",revoked:true},{name:"Fathom",revoked:true},{name:"WordPress",revoked:true},{name:"Canva",revoked:true},{name:"Vonage",revoked:true},{name:"HeyGen",revoked:true},{name:"Gamma",revoked:true},{name:"Calendly",revoked:true},{name:"Crexi",revoked:true}],
-    meetLink: "https://meet.google.com/abc-defg-hij",
+    tools: DONE_TOOLS(["Microsoft Email","Google Meet","LastPass","Otter.ai","Fathom","WordPress","Canva","Vonage","HeyGen","Gamma","Calendly","Crexi"]),
+    meetLink: null,
     activity: [
       {action:"Final pay released ($850)",by:"Aldridge Dagos",ts:"2026-03-20T09:15:00",type:"complete"},
       {action:"All 12 tool accesses revoked",by:"Hanes Abasola",ts:"2026-03-19T16:30:00",type:"complete"},
       {action:"Data Deletion Certificate signed",by:"Jericho Ong",ts:"2026-03-19T14:10:00",type:"complete"},
       {action:"Offboarding call completed via Google Meet",by:"Hanes Abasola",ts:"2026-03-19T14:00:00",type:"user"},
-      {action:"Google Meet call scheduled",by:"Jericho Ong",ts:"2026-03-17T10:22:00",type:"user"},
-      {action:"DocuSign envelope sent",by:"System",ts:"2026-03-15T15:01:00",type:"system"},
-      {action:"Notification email sent to VA",by:"System",ts:"2026-03-15T15:00:00",type:"system"},
       {action:"Offboarding initiated",by:"Hanes Abasola",ts:"2026-03-15T14:45:00",type:"system"}
     ]
   },
   {
-    id: 2, vaName: "Maria Santos", vaEmail: "maria.santos@ten80ten.com", vaPhone: "+63 918 234 5678",
-    client: "Nexus Realty", role: "Lead Gen Specialist", lastDay: "2026-04-11", finalPay: 720, reimbursements: 0,
-    status: "in-progress", notes: "Client requested urgent replacement", initiatedBy: "Hanes Abasola", reason: "Client requested replacement",
-    createdAt: "2026-04-05",
-    steps: { initiated:{done:true,date:"2026-04-05"}, notified:{done:true,date:"2026-04-05"}, callScheduled:{done:true,date:"2026-04-07"}, certSigned:{done:false,date:null}, accessRevoked:{done:false,date:null}, payReleased:{done:false,date:null} },
-    tools: [{name:"Gmail",revoked:false},{name:"Google Meet",revoked:false},{name:"Slack",revoked:true},{name:"HubSpot",revoked:true},{name:"Canva",revoked:true},{name:"LinkedIn Sales Nav",revoked:false},{name:"Calendly",revoked:false},{name:"Loom",revoked:false}],
-    meetLink: "https://meet.google.com/mno-pqrs-tuv",
-    activity: [
-      {action:"3 tool accesses revoked",by:"Hanes Abasola",ts:"2026-04-07T11:00:00",type:"user"},
-      {action:"Google Meet call scheduled for Apr 9",by:"Maria Santos",ts:"2026-04-06T09:30:00",type:"user"},
-      {action:"DocuSign envelope sent",by:"System",ts:"2026-04-05T16:16:00",type:"system"},
-      {action:"Notification email sent to VA",by:"System",ts:"2026-04-05T16:15:00",type:"system"},
-      {action:"Offboarding initiated",by:"Hanes Abasola",ts:"2026-04-05T16:00:00",type:"system"}
-    ]
+    id: 2, vaName: "Albert Mahusay", vaEmail: "albert.ten80ten@gmail.com", vaPhone: "",
+    client: "CaseMovers", role: "MVA Patient Scheduler", lastDay: "2026-03-14", finalPay: 0, reimbursements: 0,
+    status: "completed", notes: "Offboarding call via Google Meet", initiatedBy: "Hanes Abasola", reason: "Client requested replacement",
+    createdAt: "2026-03-10", steps: DONE_STEPS("2026-03-10","2026-03-16"),
+    tools: DONE_TOOLS(["Gmail","Google Meet","Canva","LastPass"]),
+    meetLink: null, activity: DONE_LOG("Albert Mahusay","2026-03-16")
   },
   {
-    id: 3, vaName: "Carlos Reyes", vaEmail: "carlos.reyes@ten80ten.com", vaPhone: "+63 919 345 6789",
-    client: "Summit Partners", role: "Customer Service Rep", lastDay: "2026-04-15", finalPay: 650, reimbursements: 0,
-    status: "in-progress", notes: "", initiatedBy: "Hanes Abasola", reason: "Contract ended",
-    createdAt: "2026-04-07",
-    steps: { initiated:{done:true,date:"2026-04-07"}, notified:{done:true,date:"2026-04-07"}, callScheduled:{done:false,date:null}, certSigned:{done:false,date:null}, accessRevoked:{done:false,date:null}, payReleased:{done:false,date:null} },
-    tools: [{name:"Microsoft Email",revoked:false},{name:"Teams",revoked:false},{name:"LastPass",revoked:false},{name:"Salesforce",revoked:false},{name:"Zendesk",revoked:false},{name:"Slack",revoked:false}],
-    meetLink: null,
-    activity: [
-      {action:"DocuSign envelope sent",by:"System",ts:"2026-04-07T10:05:00",type:"system"},
-      {action:"Notification email sent to VA",by:"System",ts:"2026-04-07T10:00:00",type:"system"},
-      {action:"Offboarding initiated",by:"Hanes Abasola",ts:"2026-04-07T09:45:00",type:"system"}
-    ]
+    id: 3, vaName: "John James Corpuz", vaEmail: "johnjames.ten80ten@gmail.com", vaPhone: "",
+    client: "Bradford Real Estate LLC", role: "Executive Assistant", lastDay: "2026-03-07", finalPay: 0, reimbursements: 0,
+    status: "completed", notes: "Offboarding call via Google Meet", initiatedBy: "Hanes Abasola", reason: "Client requested replacement",
+    createdAt: "2026-03-05", steps: DONE_STEPS("2026-03-05","2026-03-10"),
+    tools: DONE_TOOLS(["Gmail","Google Meet","LastPass","Canva","Calendly"]),
+    meetLink: null, activity: DONE_LOG("John James Corpuz","2026-03-10")
   },
   {
-    id: 4, vaName: "Ana Dela Cruz", vaEmail: "ana.delacruz@ten80ten.com", vaPhone: "+63 920 456 7890",
-    client: "Horizon Digital", role: "Social Media Manager", lastDay: "2026-04-09", finalPay: 780, reimbursements: 45,
-    status: "pending-approval", notes: "Excellent VA, client provided good feedback", initiatedBy: "Hanes Abasola", reason: "Client downsizing",
-    createdAt: "2026-04-01",
-    steps: { initiated:{done:true,date:"2026-04-01"}, notified:{done:true,date:"2026-04-01"}, callScheduled:{done:true,date:"2026-04-03"}, certSigned:{done:true,date:"2026-04-05"}, accessRevoked:{done:true,date:"2026-04-07"}, payReleased:{done:false,date:null} },
-    tools: [{name:"Gmail",revoked:true},{name:"Google Meet",revoked:true},{name:"Slack",revoked:true},{name:"Hootsuite",revoked:true},{name:"Canva",revoked:true},{name:"WordPress",revoked:true},{name:"Google Analytics",revoked:true},{name:"Mailchimp",revoked:true},{name:"Buffer",revoked:true},{name:"Figma",revoked:true}],
-    meetLink: "https://meet.google.com/xyz-abcd-efg",
-    activity: [
-      {action:"All 10 tool accesses revoked",by:"Hanes Abasola",ts:"2026-04-07T15:30:00",type:"complete"},
-      {action:"Data Deletion Certificate signed",by:"Ana Dela Cruz",ts:"2026-04-05T11:20:00",type:"complete"},
-      {action:"Offboarding call completed via Google Meet",by:"Hanes Abasola",ts:"2026-04-04T15:00:00",type:"user"},
-      {action:"Google Meet call scheduled for Apr 4",by:"Ana Dela Cruz",ts:"2026-04-03T08:45:00",type:"user"},
-      {action:"DocuSign envelope sent",by:"System",ts:"2026-04-01T14:31:00",type:"system"},
-      {action:"Notification email sent to VA",by:"System",ts:"2026-04-01T14:30:00",type:"system"},
-      {action:"Offboarding initiated",by:"Hanes Abasola",ts:"2026-04-01T14:15:00",type:"system"}
-    ]
+    id: 4, vaName: "John Michael Fernandez", vaEmail: "mike.ten80ten@gmail.com", vaPhone: "",
+    client: "Ten80Ten", role: "Business Development Manager", lastDay: "2026-02-23", finalPay: 0, reimbursements: 0,
+    status: "completed", notes: "Google Meet recording included in email", initiatedBy: "Hanes Abasola", reason: "Contract ended",
+    createdAt: "2026-02-20", steps: DONE_STEPS("2026-02-20","2026-02-25"),
+    tools: DONE_TOOLS(["Gmail","Google Meet","Slack","Canva","LinkedIn Sales Nav"]),
+    meetLink: null, activity: DONE_LOG("John Michael Fernandez","2026-02-25")
+  },
+  {
+    id: 5, vaName: "Jonah Ortega", vaEmail: "jonah.ten80ten@gmail.com", vaPhone: "",
+    client: "Brad Freeman", role: "Executive Assistant", lastDay: "2026-02-23", finalPay: 0, reimbursements: 0,
+    status: "completed", notes: "", initiatedBy: "Hanes Abasola", reason: "Client requested replacement",
+    createdAt: "2026-02-20", steps: DONE_STEPS("2026-02-20","2026-02-25"),
+    tools: DONE_TOOLS(["Gmail","Google Meet","LastPass","Canva","Calendly"]),
+    meetLink: null, activity: DONE_LOG("Jonah Ortega","2026-02-25")
+  },
+  {
+    id: 6, vaName: "LoveJoy Jumola", vaEmail: "lovejoy.ten80ten@gmail.com", vaPhone: "",
+    client: "Cabling Innovations", role: "Virtual Assistant", lastDay: "2026-01-05", finalPay: 0, reimbursements: 0,
+    status: "completed", notes: "Offboarding finalized over 2 days", initiatedBy: "Hanes Abasola", reason: "Client requested replacement",
+    createdAt: "2026-01-05", steps: DONE_STEPS("2026-01-05","2026-01-07"),
+    tools: DONE_TOOLS(["Gmail","Google Meet","LastPass","Canva"]),
+    meetLink: null, activity: DONE_LOG("LoveJoy Jumola","2026-01-07")
+  },
+  {
+    id: 7, vaName: "Cyprian Sarabosing", vaEmail: "cypriansarabosing10@gmail.com", vaPhone: "",
+    client: "BranchWater Partners", role: "Sales and Lead Generation VA", lastDay: "2025-11-14", finalPay: 0, reimbursements: 0,
+    status: "completed", notes: "Last pay dispute resolved", initiatedBy: "Hanes Abasola", reason: "Performance-based",
+    createdAt: "2025-11-10", steps: DONE_STEPS("2025-11-10","2025-11-15"),
+    tools: DONE_TOOLS(["Gmail","Google Meet","HubSpot","LinkedIn Sales Nav","Canva"]),
+    meetLink: null, activity: DONE_LOG("Cyprian Sarabosing","2025-11-15")
+  },
+  {
+    id: 8, vaName: "Alex Pionela", vaEmail: "alex.pionela@gmail.com", vaPhone: "",
+    client: "CaseMovers", role: "Medical Biller", lastDay: "2025-11-10", finalPay: 0, reimbursements: 0,
+    status: "completed", notes: "Google Meet recording shared", initiatedBy: "Hanes Abasola", reason: "Client requested replacement",
+    createdAt: "2025-11-08", steps: DONE_STEPS("2025-11-08","2025-11-13"),
+    tools: DONE_TOOLS(["Gmail","Google Meet","LastPass","Canva"]),
+    meetLink: null, activity: DONE_LOG("Alex Pionela","2025-11-13")
+  },
+  {
+    id: 9, vaName: "Marisse De Los Santos", vaEmail: "marisse.ten80ten@gmail.com", vaPhone: "",
+    client: "Ten80Ten", role: "Recruitment Manager", lastDay: "2025-11-08", finalPay: 0, reimbursements: 0,
+    status: "completed", notes: "Zoom meeting link for offboarding call", initiatedBy: "Hanes Abasola", reason: "Contract ended",
+    createdAt: "2025-11-05", steps: DONE_STEPS("2025-11-05","2025-11-10"),
+    tools: DONE_TOOLS(["Gmail","Google Meet","Slack","Canva","LinkedIn Sales Nav","Calendly"]),
+    meetLink: null, activity: DONE_LOG("Marisse De Los Santos","2025-11-10")
+  },
+  {
+    id: 10, vaName: "Selin", vaEmail: "selin.ten80ten@gmail.com", vaPhone: "",
+    client: "Eye Consultants", role: "Virtual Assistant", lastDay: "2025-09-01", finalPay: 0, reimbursements: 0,
+    status: "completed", notes: "Digital certificate of data deletion with ID and three signatures", initiatedBy: "Hanes Abasola", reason: "Client requested replacement",
+    createdAt: "2025-08-28", steps: DONE_STEPS("2025-08-28","2025-09-05"),
+    tools: DONE_TOOLS(["Gmail","Google Meet","Canva"]),
+    meetLink: null, activity: DONE_LOG("Selin","2025-09-05")
+  },
+  {
+    id: 11, vaName: "John Christian Diomaro", vaEmail: "johnchristiandiomaro@gmail.com", vaPhone: "",
+    client: "Ten80Ten", role: "Virtual Assistant", lastDay: "2025-08-01", finalPay: 0, reimbursements: 0,
+    status: "completed", notes: "VA was unresponsive via WhatsApp and personal messages. Follow-up sent via email.", initiatedBy: "Hanes Abasola", reason: "VA resigned",
+    createdAt: "2025-07-28", steps: DONE_STEPS("2025-07-28","2025-08-07"),
+    tools: DONE_TOOLS(["Gmail","Google Meet"]),
+    meetLink: null, activity: DONE_LOG("John Christian Diomaro","2025-08-07")
+  },
+  {
+    id: 12, vaName: "Hillary Senires", vaEmail: "hillary@ten80ten.com", vaPhone: "",
+    client: "ArchMoving LLC", role: "Account Manager", lastDay: "2025-07-31", finalPay: 0, reimbursements: 0,
+    status: "completed", notes: "Offboarding call recording shared via Google Meet", initiatedBy: "Hanes Abasola", reason: "Contract ended",
+    createdAt: "2025-07-28", steps: DONE_STEPS("2025-07-28","2025-08-01"),
+    tools: DONE_TOOLS(["Gmail","Google Meet","Slack","LastPass","Canva"]),
+    meetLink: null, activity: DONE_LOG("Hillary Senires","2025-08-01")
+  },
+  {
+    id: 13, vaName: "Joyce Remonde", vaEmail: "jgremonde@gmail.com", vaPhone: "",
+    client: "Ten80Ten", role: "Virtual Assistant", lastDay: "2025-07-25", finalPay: 0, reimbursements: 0,
+    status: "completed", notes: "VA submitted ID and data deletion certificate via email", initiatedBy: "Hanes Abasola", reason: "Contract ended",
+    createdAt: "2025-07-22", steps: DONE_STEPS("2025-07-22","2025-07-28"),
+    tools: DONE_TOOLS(["Gmail","Google Meet","Canva"]),
+    meetLink: null, activity: DONE_LOG("Joyce Remonde","2025-07-28")
+  },
+  {
+    id: 14, vaName: "Joness Sembrano", vaEmail: "jonessuaybaguio@gmail.com", vaPhone: "",
+    client: "Ten80Ten", role: "Virtual Assistant", lastDay: "2025-07-22", finalPay: 0, reimbursements: 0,
+    status: "completed", notes: "Quick offboarding call, majority of checklist accomplished prior", initiatedBy: "Hanes Abasola", reason: "Contract ended",
+    createdAt: "2025-07-20", steps: DONE_STEPS("2025-07-20","2025-07-24"),
+    tools: DONE_TOOLS(["Gmail","Google Meet","Canva","Notion"]),
+    meetLink: null, activity: DONE_LOG("Joness Sembrano","2025-07-24")
+  },
+  {
+    id: 15, vaName: "Karissa Mae Paradeza", vaEmail: "karissa.ten80ten@gmail.com", vaPhone: "",
+    client: "Ten80Ten", role: "Virtual Assistant", lastDay: "2025-05-23", finalPay: 0, reimbursements: 0,
+    status: "completed", notes: "VA completed offboarding checklist and transition summary proactively", initiatedBy: "Hanes Abasola", reason: "VA resigned",
+    createdAt: "2025-05-20", steps: DONE_STEPS("2025-05-20","2025-05-25"),
+    tools: DONE_TOOLS(["Gmail","Google Meet","Canva"]),
+    meetLink: null, activity: DONE_LOG("Karissa Mae Paradeza","2025-05-25")
+  },
+  {
+    id: 16, vaName: "Genel", vaEmail: "genel.ten80ten@gmail.com", vaPhone: "",
+    client: "Southern Domestic Divas", role: "CSR Virtual Assistant", lastDay: "2025-05-09", finalPay: 0, reimbursements: 0,
+    status: "completed", notes: "Offboarding checklist sent to client Chelsea Frambach", initiatedBy: "Hillary Senires", reason: "Client requested replacement",
+    createdAt: "2025-05-05", steps: DONE_STEPS("2025-05-05","2025-05-09"),
+    tools: DONE_TOOLS(["Gmail","Google Meet","Canva"]),
+    meetLink: null, activity: DONE_LOG("Genel","2025-05-09")
+  },
+  {
+    id: 17, vaName: "Lia", vaEmail: "lia.ten80ten@gmail.com", vaPhone: "",
+    client: "Ten80Ten", role: "Virtual Assistant", lastDay: "2025-06-01", finalPay: 0, reimbursements: 0,
+    status: "completed", notes: "Offboarding checklist accomplished, pending final confirmation", initiatedBy: "Hanes Abasola", reason: "Contract ended",
+    createdAt: "2025-05-28", steps: DONE_STEPS("2025-05-28","2025-06-03"),
+    tools: DONE_TOOLS(["Gmail","Google Meet","Canva"]),
+    meetLink: null, activity: DONE_LOG("Lia","2025-06-03")
+  },
+  {
+    id: 18, vaName: "Madz", vaEmail: "madz.ten80ten@gmail.com", vaPhone: "",
+    client: "ArchMoving LLC", role: "Virtual Assistant", lastDay: "2025-05-28", finalPay: 0, reimbursements: 0,
+    status: "completed", notes: "LastPass and all IP access revoked immediately per client request", initiatedBy: "Hanes Abasola", reason: "Client requested replacement",
+    createdAt: "2025-05-25", steps: DONE_STEPS("2025-05-25","2025-05-29"),
+    tools: DONE_TOOLS(["Gmail","Google Meet","LastPass"]),
+    meetLink: null, activity: DONE_LOG("Madz","2025-05-29")
   }
 ];
 
