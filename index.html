@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offboard / Ten80Ten</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-0: #0a0a0b;
+      --bg-1: #111113;
+      --bg-2: #18181a;
+      --bg-3: #1f1f22;
+      --bg-4: #27272a;
+      --border-0: #1e1e21;
+      --border-1: #2a2a2e;
+      --border-2: #3a3a3f;
+      --text-0: #f0f0f2;
+      --text-1: #b0b0b8;
+      --text-2: #707078;
+      --text-3: #505058;
+      --accent: #E8612D;
+      --accent-dim: rgba(232,97,45,0.12);
+      --gold: #C49A2D;
+      --green: #34d399;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --blue: #60a5fa;
+      --font: 'Manrope', -apple-system, sans-serif;
+      --mono: 'IBM Plex Mono', 'SF Mono', monospace;
+      --sidebar-w: 232px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 14px; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font); background: var(--bg-0); color: var(--text-0); min-height: 100vh; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; font-size: inherit; }
+    input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+    ::selection { background: var(--accent); color: white; }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-1); border-radius: 3px; }
+
+    /* === Layout === */
+    .app { display: flex; min-height: 100vh; }
+    .sidebar { width: var(--sidebar-w); background: var(--bg-1); border-right: 1px solid var(--border-0); position: fixed; top: 0; left: 0; bottom: 0; display: flex; flex-direction: column; z-index: 100; }
+    .main { margin-left: var(--sidebar-w); flex: 1; min-height: 100vh; display: flex; flex-direction: column; }
+    .content { width: 100%; padding: 0 40px 60px; flex: 1; }
+
+    /* === Sidebar === */
+    .sb-brand { padding: 20px 18px; display: flex; align-items: center; gap: 10px; }
+    .sb-brand img { width: 24px; height: auto; flex-shrink: 0; }
+    .sb-brand-text { font-weight: 800; font-size: 14px; letter-spacing: -0.03em; }
+    .sb-brand-sub { font-size: 10px; color: var(--text-2); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; display: block; margin-top: 1px; }
+
+    .sb-nav { flex: 1; padding: 8px 10px; display: flex; flex-direction: column; gap: 1px; }
+    .sb-label { font-size: 10px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; padding: 20px 10px 6px; }
+    .sb-item { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 6px; font-size: 13px; font-weight: 500; color: var(--text-2); transition: color 0.1s, background 0.1s; }
+    .sb-item:hover { color: var(--text-1); background: var(--bg-2); }
+    .sb-item.active { color: var(--text-0); font-weight: 700; }
+    .sb-item svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.5; }
+    .sb-item.active svg { opacity: 0.9; }
+    .sb-count { margin-left: auto; font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--text-2); }
+
+    .sb-footer { padding: 14px 16px; border-top: 1px solid var(--border-0); display: flex; align-items: center; gap: 9px; }
+    .sb-avatar { width: 28px; height: 28px; border-radius: 6px; background: var(--bg-3); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 10px; color: var(--text-1); flex-shrink: 0; }
+    .sb-user-name { font-size: 12px; font-weight: 600; }
+    .sb-user-role { font-size: 10px; color: var(--text-3); }
+
+    /* === Page Header === */
+    .page-header { padding: 32px 40px 0; width: 100%; }
+    .page-header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 6px; }
+    .page-title { font-size: 22px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.2; }
+    .page-meta { display: flex; align-items: center; gap: 16px; font-size: 12px; color: var(--text-2); font-weight: 500; padding-bottom: 24px; border-bottom: 1px solid var(--border-0); margin-bottom: 24px; }
+    .page-meta-stat { display: flex; align-items: center; gap: 5px; }
+    .page-meta-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+    .page-meta-num { font-family: var(--mono); font-weight: 600; color: var(--text-1); }
+    .page-actions { display: flex; align-items: center; gap: 8px; }
+
+    /* === Search === */
+    .search-box { display: flex; align-items: center; gap: 7px; background: var(--bg-2); border: 1px solid var(--border-0); border-radius: 6px; padding: 6px 10px; width: 200px; transition: border-color 0.15s; }
+    .search-box:focus-within { border-color: var(--border-2); }
+    .search-box svg { width: 14px; height: 14px; color: var(--text-3); flex-shrink: 0; }
+    .search-box input { border: none; background: none; outline: none; width: 100%; font-size: 12px; color: var(--text-0); font-weight: 500; }
+    .search-box input::placeholder { color: var(--text-3); }
+    .search-kbd { font-family: var(--mono); font-size: 10px; color: var(--text-3); border: 1px solid var(--border-1); border-radius: 3px; padding: 0 4px; line-height: 1.6; }
+
+    /* === View Toggle === */
+    .view-toggle-group { display: flex; align-items: center; border: 1px solid var(--border-1); border-radius: 6px; overflow: hidden; }
+    .view-toggle-btn { display: flex; align-items: center; justify-content: center; width: 30px; height: 28px; color: var(--text-3); transition: color 0.1s, background 0.1s; }
+    .view-toggle-btn:hover { color: var(--text-1); background: var(--bg-2); }
+    .view-toggle-btn.active { color: var(--text-0); background: var(--bg-3); }
+    .view-toggle-btn svg { width: 14px; height: 14px; }
+    .view-toggle-btn + .view-toggle-btn { border-left: 1px solid var(--border-1); }
+
+    /* === Buttons === */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; transition: all 0.1s; border: 1px solid transparent; white-space: nowrap; }
+    .btn svg { width: 14px; height: 14px; }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: #d4562a; }
+    .btn-ghost { color: var(--text-2); border-color: var(--border-1); }
+    .btn-ghost:hover { color: var(--text-1); border-color: var(--border-2); background: var(--bg-2); }
+    .btn-text { color: var(--text-2); padding: 7px 8px; }
+    .btn-text:hover { color: var(--text-0); }
+    .btn-green { background: var(--green); color: #0a0a0b; }
+    .btn-green:hover { background: #2ec48d; }
+
+    /* === Table === */
+    .tbl { width: 100%; border-collapse: collapse; }
+    .tbl th { text-align: left; padding: 0 16px 10px; font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; user-select: none; white-space: nowrap; }
+    .tbl th:hover { color: var(--text-2); }
+    .tbl th .sort-arrow { display: inline-block; margin-left: 3px; font-size: 9px; opacity: 0; transition: opacity 0.1s; }
+    .tbl th.sorted .sort-arrow { opacity: 1; color: var(--text-1); }
+    .tbl td { padding: 11px 16px; font-size: 13px; border-top: 1px solid var(--border-0); vertical-align: middle; }
+    .tbl tbody tr { cursor: pointer; transition: background 0.08s; }
+    .tbl tbody tr:hover { background: var(--bg-2); }
+    .tbl .va-cell { display: flex; align-items: center; gap: 10px; }
+    .tbl .va-init { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 10px; flex-shrink: 0; background: var(--bg-3); color: var(--text-1); }
+    .tbl .va-name { font-weight: 600; }
+    .tbl .va-sub { font-size: 11px; color: var(--text-3); margin-top: 1px; }
+    .tbl .muted { color: var(--text-2); }
+    .tbl .mono { font-family: var(--mono); font-size: 12px; }
+
+    /* === Conditional Row Styling === */
+    .tbl tbody tr.row-urgent { background: rgba(232,97,45,0.04); }
+    .tbl tbody tr.row-urgent:hover { background: rgba(232,97,45,0.08); }
+    .tbl tbody tr.row-overdue { background: rgba(248,113,113,0.04); }
+    .tbl tbody tr.row-overdue:hover { background: rgba(248,113,113,0.08); }
+    .tbl tbody tr.row-done { opacity: 0.6; }
+
+    /* === Status text (not badges) === */
+    .status { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; }
+    .status-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+    .st-active { color: var(--accent); }
+    .st-active .status-dot { background: var(--accent); }
+    .st-approval { color: var(--yellow); }
+    .st-approval .status-dot { background: var(--yellow); }
+    .st-complete { color: var(--green); }
+    .st-complete .status-dot { background: var(--green); }
+    .st-pending { color: var(--text-2); }
+    .st-pending .status-dot { background: var(--text-3); }
+    .st-signed { color: var(--green); }
+    .st-released { color: var(--green); }
+    .st-revoked { color: var(--text-3); }
+
+    /* === Progress === */
+    .access-prog { display: flex; align-items: center; gap: 8px; }
+    .access-bar { width: 48px; height: 3px; background: var(--border-0); border-radius: 2px; overflow: hidden; }
+    .access-fill { height: 100%; border-radius: 2px; background: var(--accent); transition: width 0.3s; }
+    .access-fill.done { background: var(--green); }
+    .access-text { font-family: var(--mono); font-size: 11px; color: var(--text-2); font-weight: 500; }
+
+    /* === Attention Bar === */
+    .attention-bar { margin-bottom: 20px; padding: 12px 16px; background: rgba(232,97,45,0.06); border-left: 2px solid var(--accent); border-radius: 0 6px 6px 0; display: none; }
+    .attention-bar.show { display: block; }
+    .attention-bar-title { font-size: 11px; font-weight: 700; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .attention-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 12px; color: var(--text-1); font-weight: 500; cursor: pointer; }
+    .attention-item:hover { color: var(--text-0); }
+    .attention-item-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .attention-item-dot.warn { background: var(--yellow); }
+    .attention-item-dot.stale { background: var(--text-3); }
+
+    /* === Board / Kanban View === */
+    .board { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 20px; min-height: 400px; }
+    .board-col { min-width: 220px; width: 220px; flex-shrink: 0; display: flex; flex-direction: column; }
+    .board-col-header { font-size: 11px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 8px 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-0); margin-bottom: 8px; }
+    .board-col-count { font-family: var(--mono); font-size: 10px; font-weight: 600; color: var(--text-3); background: var(--bg-3); border-radius: 3px; padding: 1px 5px; }
+    .board-col-cards { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .board-card { padding: 10px 10px; border: 1px solid var(--border-0); border-radius: 6px; background: var(--bg-1); cursor: pointer; transition: border-color 0.1s; }
+    .board-card:hover { border-color: var(--border-2); }
+    .board-card-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .board-card-client { font-size: 11px; color: var(--text-3); margin-bottom: 8px; }
+    .board-card-footer { display: flex; align-items: center; justify-content: space-between; }
+    .board-card-date { font-family: var(--mono); font-size: 10px; color: var(--text-3); }
+    .board-card-bar { width: 36px; height: 3px; background: var(--border-0); border-radius: 2px; overflow: hidden; }
+    .board-card-fill { height: 100%; border-radius: 2px; background: var(--accent); }
+    .board-card-fill.done { background: var(--green); }
+
+    /* === Views === */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* === Form === */
+    .form-page { max-width: 640px; }
+    .form-back { display: inline-flex; align-items: center; gap: 5px; color: var(--text-3); font-size: 12px; font-weight: 600; margin-bottom: 28px; transition: color 0.1s; }
+    .form-back:hover { color: var(--text-1); }
+    .form-back svg { width: 14px; height: 14px; }
+    .form-title { font-size: 20px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 4px; }
+    .form-desc { font-size: 13px; color: var(--text-2); margin-bottom: 32px; line-height: 1.5; }
+    .form-section { margin-bottom: 28px; }
+    .form-section-label { font-size: 11px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border-0); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--text-1); }
+    .form-input, .form-select, .form-textarea { background: var(--bg-1); border: 1px solid var(--border-1); border-radius: 5px; padding: 8px 11px; font-size: 13px; color: var(--text-0); outline: none; transition: border-color 0.15s; }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent); }
+    .form-input::placeholder { color: var(--text-3); }
+    .form-input.error, .form-select.error { border-color: var(--red); }
+    .form-error { font-size: 11px; color: var(--red); font-weight: 500; display: none; }
+    .form-error.show { display: block; }
+    .form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23505058' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px; cursor: pointer; }
+    .form-select option { background: var(--bg-2); }
+    .form-textarea { resize: vertical; min-height: 72px; }
+    .form-hint { font-size: 11px; color: var(--text-3); }
+
+    /* === Tool chips (form) === */
+    .chip-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip { display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: 500; border: 1px solid var(--border-1); background: var(--bg-1); cursor: pointer; transition: all 0.1s; user-select: none; color: var(--text-2); }
+    .chip:hover { border-color: var(--border-2); color: var(--text-1); }
+    .chip.on { background: var(--accent-dim); border-color: rgba(232,97,45,0.3); color: var(--accent); }
+    .chip-x { font-size: 10px; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; border-radius: 3px; }
+    .chip.on .chip-x { background: rgba(232,97,45,0.2); }
+    .chip-empty { padding: 16px; text-align: center; color: var(--text-3); font-size: 12px; border: 1px dashed var(--border-1); border-radius: 5px; }
+
+    /* === Detail view === */
+    .detail-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
+    .detail-who { display: flex; align-items: center; gap: 14px; }
+    .detail-init { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; background: var(--bg-3); color: var(--text-1); }
+    .detail-name { font-size: 20px; font-weight: 800; letter-spacing: -0.03em; }
+    .detail-sub { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+
+    /* === Inline Editing === */
+    .inline-edit { cursor: text; border-bottom: 1px dashed transparent; transition: border-color 0.1s; }
+    .inline-edit:hover { border-bottom-color: var(--border-2); }
+    .inline-edit-input { background: var(--bg-1); border: 1px solid var(--accent); border-radius: 4px; padding: 4px 8px; font-size: 13px; color: var(--text-0); outline: none; font-family: var(--mono); }
+    .inline-edit-textarea { background: var(--bg-1); border: 1px solid var(--accent); border-radius: 4px; padding: 6px 8px; font-size: 13px; color: var(--text-0); outline: none; font-family: var(--font); width: 100%; min-height: 60px; resize: vertical; }
+
+    /* === Progress timeline (vertical) === */
+    .v-timeline { margin-bottom: 32px; }
+    .v-step { display: flex; align-items: flex-start; gap: 14px; position: relative; padding-bottom: 0; }
+    .v-step:not(:last-child) { padding-bottom: 20px; }
+    .v-step:not(:last-child)::after { content: ''; position: absolute; left: 11px; top: 24px; bottom: 0; width: 1px; background: var(--border-0); }
+    .v-step.done:not(:last-child)::after { background: var(--green); opacity: 0.3; }
+    .v-dot { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border-1); background: var(--bg-0); display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; z-index: 1; }
+    .v-dot svg { width: 11px; height: 11px; }
+    .v-step.done .v-dot { border-color: var(--green); background: var(--green); color: white; }
+    .v-step.current .v-dot { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
+    .v-step.waiting .v-dot { border-color: var(--border-1); }
+    .v-step-text { padding-top: 1px; }
+    .v-step-label { font-size: 13px; font-weight: 600; color: var(--text-2); }
+    .v-step.done .v-step-label { color: var(--text-1); }
+    .v-step.current .v-step-label { color: var(--text-0); }
+    .v-step-date { font-family: var(--mono); font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+    /* === Detail grid === */
+    .detail-grid { display: grid; grid-template-columns: 1fr 300px; gap: 32px; }
+    .detail-section { margin-bottom: 28px; }
+    .detail-section-label { font-size: 10px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 12px; }
+    .detail-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .detail-field-label { font-size: 11px; color: var(--text-3); font-weight: 500; margin-bottom: 2px; }
+    .detail-field-value { font-size: 13px; font-weight: 500; }
+    .detail-field-value.money { font-family: var(--mono); color: var(--green); font-weight: 600; }
+
+    /* === Tool list (detail) === */
+    .tool-list { display: flex; flex-direction: column; gap: 0; }
+    .tool-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-0); }
+    .tool-row:last-child { border-bottom: none; }
+    .tool-row-name { font-size: 13px; font-weight: 500; }
+    .tool-row-name.struck { text-decoration: line-through; color: var(--text-3); }
+    .tool-sw { position: relative; width: 32px; height: 18px; border-radius: 9px; background: var(--border-1); cursor: pointer; transition: background 0.15s; flex-shrink: 0; }
+    .tool-sw.on { background: var(--green); }
+    .tool-sw::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: white; transition: transform 0.15s; }
+    .tool-sw.on::after { transform: translateX(14px); }
+
+    /* === Activity log === */
+    .log-list { display: flex; flex-direction: column; }
+    .log-item { padding: 8px 0; border-bottom: 1px solid var(--border-0); }
+    .log-item:last-child { border-bottom: none; }
+    .log-action { font-size: 12px; font-weight: 500; color: var(--text-1); line-height: 1.4; }
+    .log-meta { font-size: 11px; color: var(--text-3); margin-top: 1px; }
+
+    /* === Action links === */
+    .act-link { display: flex; align-items: center; gap: 8px; padding: 9px 0; font-size: 13px; font-weight: 500; color: var(--text-2); cursor: pointer; transition: color 0.1s; border-bottom: 1px solid var(--border-0); }
+    .act-link:last-child { border-bottom: none; }
+    .act-link:hover { color: var(--text-0); }
+    .act-link svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.5; }
+    .act-link .act-arrow { margin-left: auto; opacity: 0; transition: opacity 0.1s; font-size: 11px; color: var(--text-3); }
+    .act-link:hover .act-arrow { opacity: 1; }
+    .act-link.highlight { color: var(--green); }
+    .act-link.highlight svg { opacity: 0.8; }
+
+    /* === Empty === */
+    .empty { padding: 40px; text-align: center; color: var(--text-3); font-size: 13px; }
+
+    /* === Keyboard help === */
+    .kbd-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 300; display: none; align-items: center; justify-content: center; }
+    .kbd-overlay.show { display: flex; }
+    .kbd-panel { background: var(--bg-2); border: 1px solid var(--border-1); border-radius: 8px; padding: 24px; width: 340px; }
+    .kbd-title { font-size: 14px; font-weight: 700; margin-bottom: 16px; }
+    .kbd-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; font-size: 13px; color: var(--text-1); }
+    .kbd-key { font-family: var(--mono); font-size: 11px; background: var(--bg-0); border: 1px solid var(--border-1); border-radius: 4px; padding: 2px 7px; color: var(--text-2); }
+
+    /* === Responsive === */
+    @media (max-width: 1100px) { .detail-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 860px) {
+      .sidebar { transform: translateX(-100%); transition: transform 0.2s; }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; }
+      .page-header { padding: 24px 20px 0; }
+      .content { padding: 0 20px 40px; }
+      .form-row { grid-template-columns: 1fr; }
+      .detail-fields { grid-template-columns: 1fr; }
+      .mobile-toggle { display: flex; }
+      .board-col { min-width: 180px; width: 180px; }
+    }
+    @media (min-width: 861px) { .mobile-toggle { display: none; } }
+
+    .mobile-toggle { position: fixed; top: 12px; left: 12px; z-index: 200; width: 32px; height: 32px; border-radius: 6px; background: var(--bg-2); border: 1px solid var(--border-1); align-items: center; justify-content: center; color: var(--text-1); }
+    .mobile-toggle svg { width: 16px; height: 16px; }
+  </style>
+</head>
+<body>
+<div class="app">
+  <button class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <img src="../Ten80Ten Logo 2.png" alt="Ten80Ten">
+      <div>
+        <span class="sb-brand-text">Ten80Ten</span>
+        <span class="sb-brand-sub">Offboarding</span>
+      </div>
+    </div>
+
+    <nav class="sb-nav">
+      <div class="sb-label">Navigate</div>
+      <button class="sb-item active" data-view="dashboard" onclick="go('dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </button>
+      <button class="sb-item" data-view="history" onclick="go('history')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+        History
+      </button>
+
+      <div class="sb-label">Filter</div>
+      <button class="sb-item" data-filter="in-progress" onclick="filterBy('in-progress')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg>
+        In Progress
+        <span class="sb-count" id="cntActive">0</span>
+      </button>
+      <button class="sb-item" data-filter="pending-approval" onclick="filterBy('pending-approval')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+        Needs Approval
+        <span class="sb-count" id="cntApproval">0</span>
+      </button>
+
+      <div class="sb-label" style="margin-top:auto;padding-top:8px">Quick</div>
+      <button class="sb-item" onclick="go('new')" style="color:var(--accent)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Offboarding
+      </button>
+    </nav>
+
+    <div class="sb-footer">
+      <div class="sb-avatar">AD</div>
+      <div>
+        <div class="sb-user-name">Aldridge Dagos</div>
+        <div class="sb-user-role">Managing Partner</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <!-- ===== Dashboard ===== -->
+    <section id="v-dashboard" class="view active">
+      <div class="page-header">
+        <div class="page-header-row">
+          <h1 class="page-title">Offboardings</h1>
+          <div class="page-actions">
+            <div class="search-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+              <input type="text" placeholder="Search..." id="searchInput" oninput="doSearch(this.value)">
+              <span class="search-kbd">/</span>
+            </div>
+            <div class="view-toggle-group">
+              <button class="view-toggle-btn active" id="toggleTable" onclick="toggleView('table')" title="Table view">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+              </button>
+              <button class="view-toggle-btn" id="toggleBoard" onclick="toggleView('board')" title="Board view">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="12" rx="1"/><rect x="17" y="3" width="5" height="15" rx="1"/></svg>
+              </button>
+            </div>
+            <button class="btn btn-ghost" onclick="exportCSV()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export
+            </button>
+            <button class="btn btn-primary" onclick="go('new')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              New
+            </button>
+          </div>
+        </div>
+        <div class="page-meta" id="pageMeta"></div>
+      </div>
+      <div class="content">
+        <div id="attentionBar" class="attention-bar"></div>
+        <div id="tableView">
+          <table class="tbl" id="mainTable">
+            <thead>
+              <tr>
+                <th data-sort="vaName" onclick="sortTable('vaName')">VA <span class="sort-arrow"></span></th>
+                <th data-sort="client" onclick="sortTable('client')">Client <span class="sort-arrow"></span></th>
+                <th data-sort="role" onclick="sortTable('role')">Role <span class="sort-arrow"></span></th>
+                <th data-sort="lastDay" onclick="sortTable('lastDay')">Last Day <span class="sort-arrow"></span></th>
+                <th data-sort="status" onclick="sortTable('status')">Status <span class="sort-arrow"></span></th>
+                <th>Certificate</th>
+                <th>Access</th>
+                <th data-sort="finalPay" onclick="sortTable('finalPay')">Pay <span class="sort-arrow"></span></th>
+              </tr>
+            </thead>
+            <tbody id="tblBody"></tbody>
+          </table>
+        </div>
+        <div id="boardView" class="board" style="display:none"></div>
+      </div>
+    </section>
+
+    <!-- ===== New ===== -->
+    <section id="v-new" class="view">
+      <div class="page-header"><h1 class="page-title">New Offboarding</h1></div>
+      <div class="content">
+        <div class="form-page">
+          <button class="form-back" onclick="go('dashboard')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
+            Dashboard
+          </button>
+          <p class="form-desc">Fill in VA and assignment details. The system handles notifications, document signing, and scheduling.</p>
+
+          <form id="offboardForm" onsubmit="submitForm(event)" novalidate>
+            <div class="form-section">
+              <div class="form-section-label">VA Information</div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Full Name</label>
+                  <input type="text" class="form-input" placeholder="Maria Santos" required id="f_name">
+                  <span class="form-error" id="e_name">Name is required</span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-input" placeholder="maria@ten80ten.com" required id="f_email">
+                  <span class="form-error" id="e_email">Valid email required</span>
+                </div>
+              </div>
+              <div class="form-group" style="max-width:50%">
+                <label class="form-label">Phone</label>
+                <input type="tel" class="form-input" placeholder="+63 9XX XXX XXXX" id="f_phone">
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-label">Assignment</div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Client</label>
+                  <select class="form-select" required id="f_client" onchange="loadTools()">
+                    <option value="">Select client</option>
+                    <option>Armor Capital Group</option>
+                    <option>Nexus Realty</option>
+                    <option>Summit Partners</option>
+                    <option>Horizon Digital</option>
+                    <option>Pacific Coast Ventures</option>
+                    <option>Meridian Group</option>
+                  </select>
+                  <span class="form-error" id="e_client">Client is required</span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Role</label>
+                  <input type="text" class="form-input" placeholder="Executive Assistant" required id="f_role">
+                  <span class="form-error" id="e_role">Role is required</span>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Last Working Day</label>
+                  <input type="date" class="form-input" required id="f_lastday">
+                  <span class="form-error" id="e_lastday">Date is required</span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Reason</label>
+                  <select class="form-select" id="f_reason">
+                    <option value="">Select reason</option>
+                    <option>Client requested replacement</option>
+                    <option>VA resigned</option>
+                    <option>Contract ended</option>
+                    <option>Performance-based</option>
+                    <option>Client downsizing</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-label">Tools and Access</div>
+              <p class="form-hint" style="margin-bottom:10px">Select the tools this VA currently has access to.</p>
+              <div id="toolGrid" class="chip-grid">
+                <div class="chip-empty">Select a client to load their tools</div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-label">Settlement</div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Final Pay (USD)</label>
+                  <input type="number" class="form-input" placeholder="0.00" step="0.01" required id="f_pay">
+                  <span class="form-error" id="e_pay">Pay amount required</span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Reimbursements (USD)</label>
+                  <input type="number" class="form-input" placeholder="0.00" step="0.01" value="0" id="f_reimb">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Notes</label>
+                <textarea class="form-textarea" placeholder="Additional context..." id="f_notes"></textarea>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;padding-top:4px">
+              <button type="submit" class="btn btn-primary">Start Offboarding</button>
+              <button type="button" class="btn btn-ghost" onclick="go('dashboard')">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Detail ===== -->
+    <section id="v-detail" class="view">
+      <div class="page-header"><h1 class="page-title" id="detailPageTitle">Details</h1></div>
+      <div class="content">
+        <button class="form-back" onclick="go('dashboard')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
+          Dashboard
+        </button>
+        <div id="detailContent"></div>
+      </div>
+    </section>
+
+    <!-- ===== History ===== -->
+    <section id="v-history" class="view">
+      <div class="page-header">
+        <div class="page-header-row">
+          <h1 class="page-title">History</h1>
+          <div class="page-actions">
+            <button class="btn btn-ghost" onclick="exportCSV()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export CSV
+            </button>
+          </div>
+        </div>
+        <div style="padding-bottom:24px;border-bottom:1px solid var(--border-0);margin-bottom:24px">
+          <span style="font-size:12px;color:var(--text-3)">Completed offboardings</span>
+        </div>
+      </div>
+      <div class="content">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>VA</th>
+              <th>Client</th>
+              <th>Role</th>
+              <th>Completed</th>
+              <th>Final Pay</th>
+            </tr>
+          </thead>
+          <tbody id="histBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Keyboard shortcuts panel -->
+<div class="kbd-overlay" id="kbdOverlay" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="kbd-panel">
+    <div class="kbd-title">Keyboard Shortcuts</div>
+    <div class="kbd-row"><span>New offboarding</span><span class="kbd-key">N</span></div>
+    <div class="kbd-row"><span>Focus search</span><span class="kbd-key">/</span></div>
+    <div class="kbd-row"><span>Toggle table/board</span><span class="kbd-key">V</span></div>
+    <div class="kbd-row"><span>Go back</span><span class="kbd-key">Esc</span></div>
+    <div class="kbd-row"><span>Show shortcuts</span><span class="kbd-key">?</span></div>
+    <div class="kbd-row"><span>Dashboard</span><span class="kbd-key">G then D</span></div>
+    <div class="kbd-row"><span>History</span><span class="kbd-key">G then H</span></div>
+    <div style="margin-top:14px;text-align:right"><button class="btn btn-ghost" onclick="document.getElementById('kbdOverlay').classList.remove('show')">Close</button></div>
+  </div>
+</div>
+
+<script>
+// ===================================================================
+// DATA
+// ===================================================================
+const CLIENT_TOOLS = {
+  "Armor Capital Group": ["Microsoft Email","Google Meet","LastPass","Otter.ai","Fathom","WordPress","Canva","Vonage","HeyGen","Gamma","Calendly","Crexi"],
+  "Nexus Realty": ["Gmail","Google Meet","Slack","HubSpot","Canva","LinkedIn Sales Nav","Calendly","Loom"],
+  "Summit Partners": ["Microsoft Email","Teams","LastPass","Salesforce","Zendesk","Slack"],
+  "Horizon Digital": ["Gmail","Google Meet","Slack","Hootsuite","Canva","WordPress","Google Analytics","Mailchimp","Buffer","Figma"],
+  "Pacific Coast Ventures": ["Gmail","Google Meet","Slack","Monday.com","Canva","HubSpot","Asana"],
+  "Meridian Group": ["Microsoft Email","Teams","SharePoint","LastPass","Salesforce","Zendesk","Slack","Asana"]
+};
+
+const SEED_DATA = [
+  {
+    id: 1, vaName: "Jericho Ong", vaEmail: "jericho.ong@ten80ten.com", vaPhone: "+63 917 123 4567",
+    client: "Armor Capital Group", role: "Executive Assistant", lastDay: "2026-03-19", finalPay: 850, reimbursements: 0,
+    status: "completed", notes: "", initiatedBy: "Hanes Abasola", reason: "Client requested replacement",
+    createdAt: "2026-03-15",
+    steps: { initiated:{done:true,date:"2026-03-15"}, notified:{done:true,date:"2026-03-15"}, callScheduled:{done:true,date:"2026-03-17"}, certSigned:{done:true,date:"2026-03-19"}, accessRevoked:{done:true,date:"2026-03-19"}, payReleased:{done:true,date:"2026-03-20"} },
+    tools: [{name:"Microsoft Email",revoked:true},{name:"Google Meet",revoked:true},{name:"LastPass",revoked:true},{name:"Otter.ai",revoked:true},{name:"Fathom",revoked:true},{name:"WordPress",revoked:true},{name:"Canva",revoked:true},{name:"Vonage",revoked:true},{name:"HeyGen",revoked:true},{name:"Gamma",revoked:true},{name:"Calendly",revoked:true},{name:"Crexi",revoked:true}],
+    meetLink: "https://meet.google.com/abc-defg-hij",
+    activity: [
+      {action:"Final pay released ($850)",by:"Aldridge Dagos",ts:"2026-03-20T09:15:00",type:"complete"},
+      {action:"All 12 tool accesses revoked",by:"Hanes Abasola",ts:"2026-03-19T16:30:00",type:"complete"},
+      {action:"Data Deletion Certificate signed",by:"Jericho Ong",ts:"2026-03-19T14:10:00",type:"complete"},
+      {action:"Offboarding call completed via Google Meet",by:"Hanes Abasola",ts:"2026-03-19T14:00:00",type:"user"},
+      {action:"Google Meet call scheduled",by:"Jericho Ong",ts:"2026-03-17T10:22:00",type:"user"},
+      {action:"DocuSign envelope sent",by:"System",ts:"2026-03-15T15:01:00",type:"system"},
+      {action:"Notification email sent to VA",by:"System",ts:"2026-03-15T15:00:00",type:"system"},
+      {action:"Offboarding initiated",by:"Hanes Abasola",ts:"2026-03-15T14:45:00",type:"system"}
+    ]
+  },
+  {
+    id: 2, vaName: "Maria Santos", vaEmail: "maria.santos@ten80ten.com", vaPhone: "+63 918 234 5678",
+    client: "Nexus Realty", role: "Lead Gen Specialist", lastDay: "2026-04-11", finalPay: 720, reimbursements: 0,
+    status: "in-progress", notes: "Client requested urgent replacement", initiatedBy: "Hanes Abasola", reason: "Client requested replacement",
+    createdAt: "2026-04-05",
+    steps: { initiated:{done:true,date:"2026-04-05"}, notified:{done:true,date:"2026-04-05"}, callScheduled:{done:true,date:"2026-04-07"}, certSigned:{done:false,date:null}, accessRevoked:{done:false,date:null}, payReleased:{done:false,date:null} },
+    tools: [{name:"Gmail",revoked:false},{name:"Google Meet",revoked:false},{name:"Slack",revoked:true},{name:"HubSpot",revoked:true},{name:"Canva",revoked:true},{name:"LinkedIn Sales Nav",revoked:false},{name:"Calendly",revoked:false},{name:"Loom",revoked:false}],
+    meetLink: "https://meet.google.com/mno-pqrs-tuv",
+    activity: [
+      {action:"3 tool accesses revoked",by:"Hanes Abasola",ts:"2026-04-07T11:00:00",type:"user"},
+      {action:"Google Meet call scheduled for Apr 9",by:"Maria Santos",ts:"2026-04-06T09:30:00",type:"user"},
+      {action:"DocuSign envelope sent",by:"System",ts:"2026-04-05T16:16:00",type:"system"},
+      {action:"Notification email sent to VA",by:"System",ts:"2026-04-05T16:15:00",type:"system"},
+      {action:"Offboarding initiated",by:"Hanes Abasola",ts:"2026-04-05T16:00:00",type:"system"}
+    ]
+  },
+  {
+    id: 3, vaName: "Carlos Reyes", vaEmail: "carlos.reyes@ten80ten.com", vaPhone: "+63 919 345 6789",
+    client: "Summit Partners", role: "Customer Service Rep", lastDay: "2026-04-15", finalPay: 650, reimbursements: 0,
+    status: "in-progress", notes: "", initiatedBy: "Hanes Abasola", reason: "Contract ended",
+    createdAt: "2026-04-07",
+    steps: { initiated:{done:true,date:"2026-04-07"}, notified:{done:true,date:"2026-04-07"}, callScheduled:{done:false,date:null}, certSigned:{done:false,date:null}, accessRevoked:{done:false,date:null}, payReleased:{done:false,date:null} },
+    tools: [{name:"Microsoft Email",revoked:false},{name:"Teams",revoked:false},{name:"LastPass",revoked:false},{name:"Salesforce",revoked:false},{name:"Zendesk",revoked:false},{name:"Slack",revoked:false}],
+    meetLink: null,
+    activity: [
+      {action:"DocuSign envelope sent",by:"System",ts:"2026-04-07T10:05:00",type:"system"},
+      {action:"Notification email sent to VA",by:"System",ts:"2026-04-07T10:00:00",type:"system"},
+      {action:"Offboarding initiated",by:"Hanes Abasola",ts:"2026-04-07T09:45:00",type:"system"}
+    ]
+  },
+  {
+    id: 4, vaName: "Ana Dela Cruz", vaEmail: "ana.delacruz@ten80ten.com", vaPhone: "+63 920 456 7890",
+    client: "Horizon Digital", role: "Social Media Manager", lastDay: "2026-04-09", finalPay: 780, reimbursements: 45,
+    status: "pending-approval", notes: "Excellent VA, client provided good feedback", initiatedBy: "Hanes Abasola", reason: "Client downsizing",
+    createdAt: "2026-04-01",
+    steps: { initiated:{done:true,date:"2026-04-01"}, notified:{done:true,date:"2026-04-01"}, callScheduled:{done:true,date:"2026-04-03"}, certSigned:{done:true,date:"2026-04-05"}, accessRevoked:{done:true,date:"2026-04-07"}, payReleased:{done:false,date:null} },
+    tools: [{name:"Gmail",revoked:true},{name:"Google Meet",revoked:true},{name:"Slack",revoked:true},{name:"Hootsuite",revoked:true},{name:"Canva",revoked:true},{name:"WordPress",revoked:true},{name:"Google Analytics",revoked:true},{name:"Mailchimp",revoked:true},{name:"Buffer",revoked:true},{name:"Figma",revoked:true}],
+    meetLink: "https://meet.google.com/xyz-abcd-efg",
+    activity: [
+      {action:"All 10 tool accesses revoked",by:"Hanes Abasola",ts:"2026-04-07T15:30:00",type:"complete"},
+      {action:"Data Deletion Certificate signed",by:"Ana Dela Cruz",ts:"2026-04-05T11:20:00",type:"complete"},
+      {action:"Offboarding call completed via Google Meet",by:"Hanes Abasola",ts:"2026-04-04T15:00:00",type:"user"},
+      {action:"Google Meet call scheduled for Apr 4",by:"Ana Dela Cruz",ts:"2026-04-03T08:45:00",type:"user"},
+      {action:"DocuSign envelope sent",by:"System",ts:"2026-04-01T14:31:00",type:"system"},
+      {action:"Notification email sent to VA",by:"System",ts:"2026-04-01T14:30:00",type:"system"},
+      {action:"Offboarding initiated",by:"Hanes Abasola",ts:"2026-04-01T14:15:00",type:"system"}
+    ]
+  }
+];
+
+const STEP_ORDER = ['initiated','notified','callScheduled','certSigned','accessRevoked','payReleased'];
+const STEP_LABELS = { initiated:'Initiated', notified:'VA Notified', callScheduled:'Call Scheduled', certSigned:'Certificate Signed', accessRevoked:'Access Revoked', payReleased:'Pay Released' };
+
+// ===================================================================
+// BOARD COLUMN DEFINITIONS
+// ===================================================================
+const BOARD_COLUMNS = [
+  { key: 'notified', label: 'Notified', test: ob => ob.steps.initiated.done && ob.steps.notified.done && !ob.steps.callScheduled.done },
+  { key: 'callScheduled', label: 'Call Scheduled', test: ob => ob.steps.callScheduled.done && !ob.steps.certSigned.done },
+  { key: 'certSigned', label: 'Cert Signed', test: ob => ob.steps.certSigned.done && !ob.steps.accessRevoked.done },
+  { key: 'accessRevoked', label: 'Access Revoked', test: ob => ob.steps.accessRevoked.done && !ob.steps.payReleased.done },
+  { key: 'complete', label: 'Complete', test: ob => ob.steps.payReleased.done }
+];
+
+// ===================================================================
+// STATE
+// ===================================================================
+let data = [];
+let sortCol = null;
+let sortDir = 'asc';
+let activeFilter = null;
+let selectedTools = new Set();
+let currentDetailId = null;
+let lastKeyG = 0;
+let viewMode = 'table';
+
+// ===================================================================
+// PERSISTENCE
+// ===================================================================
+const STORAGE_KEY = 'ten80ten_offboard_v2';
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      data = JSON.parse(raw);
+      if (data.length > 0) return;
+    }
+  } catch(e) {}
+  data = JSON.parse(JSON.stringify(SEED_DATA));
+  saveData();
+}
+
+function saveData() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+}
+
+// ===================================================================
+// DATE HELPERS
+// ===================================================================
+function relDay(dateStr) {
+  if (!dateStr) return '';
+  const now = new Date();
+  const d = new Date(dateStr + 'T00:00:00');
+  const diffMs = d - new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const days = Math.round(diffMs / 86400000);
+  if (days === 0) return 'today';
+  if (days === 1) return 'tomorrow';
+  if (days === -1) return 'yesterday';
+  if (days > 0) return `in ${days}d`;
+  return `${Math.abs(days)}d ago`;
+}
+
+function daysDiff(dateStr) {
+  if (!dateStr) return Infinity;
+  const now = new Date();
+  const d = new Date(dateStr + 'T00:00:00');
+  const diffMs = d - new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.round(diffMs / 86400000);
+}
+
+function fmtDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+}
+
+function fmtDateLong(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+}
+
+function timeAgo(ts) {
+  if (!ts) return '';
+  const now = new Date();
+  const d = new Date(ts);
+  const sec = Math.floor((now - d) / 1000);
+  if (sec < 60) return 'just now';
+  const min = Math.floor(sec / 60);
+  if (min < 60) return `${min}m ago`;
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return `${hr}h ago`;
+  const days = Math.floor(hr / 24);
+  if (days < 30) return `${days}d ago`;
+  return fmtDate(ts.split('T')[0]);
+}
+
+function fmtTimestamp(ts) {
+  if (!ts) return '';
+  const d = new Date(ts);
+  return d.toLocaleDateString('en-US', { month:'short', day:'numeric' }) + ', ' +
+         d.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
+}
+
+// ===================================================================
+// HELPERS
+// ===================================================================
+function initials(name) {
+  return name.split(' ').map(w => w[0]).join('').substring(0,2).toUpperCase();
+}
+
+function completedSteps(steps) {
+  return STEP_ORDER.filter(k => steps[k].done).length;
+}
+
+function activeStep(steps) {
+  for (const k of STEP_ORDER) { if (!steps[k].done) return k; }
+  return null;
+}
+
+function statusText(status) {
+  if (status === 'in-progress') return '<span class="status st-active"><span class="status-dot"></span>In Progress</span>';
+  if (status === 'pending-approval') return '<span class="status st-approval"><span class="status-dot"></span>Needs Approval</span>';
+  if (status === 'completed') return '<span class="status st-complete"><span class="status-dot"></span>Completed</span>';
+  return '';
+}
+
+function certText(steps) {
+  return steps.certSigned.done
+    ? '<span class="status st-signed"><span class="status-dot" style="background:var(--green)"></span>Signed</span>'
+    : '<span class="status st-pending"><span class="status-dot"></span>Pending</span>';
+}
+
+function payText(ob) {
+  if (ob.steps.payReleased.done) return '<span class="status st-released"><span class="status-dot" style="background:var(--green)"></span>Released</span>';
+  if (ob.status === 'pending-approval') return '<span class="status st-approval"><span class="status-dot" style="background:var(--yellow)"></span>Approve</span>';
+  return '<span class="status st-pending"><span class="status-dot"></span>Pending</span>';
+}
+
+function accessBar(tools) {
+  const rev = tools.filter(t => t.revoked).length;
+  const tot = tools.length;
+  const pct = tot ? (rev / tot * 100) : 0;
+  const cls = pct === 100 ? 'done' : '';
+  return `<div class="access-prog"><div class="access-bar"><div class="access-fill ${cls}" style="width:${pct}%"></div></div><span class="access-text">${rev}/${tot}</span></div>`;
+}
+
+function rowClass(ob) {
+  if (ob.status === 'completed') return 'row-done';
+  const days = daysDiff(ob.lastDay);
+  if (days < 0) return 'row-overdue';
+  if (days <= 2) return 'row-urgent';
+  return '';
+}
+
+// ===================================================================
+// VIEW TOGGLE
+// ===================================================================
+function toggleView(mode) {
+  viewMode = mode;
+  document.getElementById('toggleTable').classList.toggle('active', mode === 'table');
+  document.getElementById('toggleBoard').classList.toggle('active', mode === 'board');
+  document.getElementById('tableView').style.display = mode === 'table' ? '' : 'none';
+  document.getElementById('boardView').style.display = mode === 'board' ? 'flex' : 'none';
+  if (mode === 'board') renderBoard();
+}
+
+// ===================================================================
+// ROUTING
+// ===================================================================
+function go(view, param) {
+  if (view === 'dashboard') { window.location.hash = '#dashboard'; }
+  else if (view === 'new') { window.location.hash = '#new'; }
+  else if (view === 'history') { window.location.hash = '#history'; }
+  else if (view === 'detail') { window.location.hash = '#detail/' + param; }
+}
+
+function route() {
+  const hash = window.location.hash || '#dashboard';
+  const parts = hash.substring(1).split('/');
+  const view = parts[0] || 'dashboard';
+  const param = parts[1] ? parseInt(parts[1]) : null;
+
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(n => n.classList.remove('active'));
+
+  if (view === 'dashboard') {
+    document.getElementById('v-dashboard').classList.add('active');
+    document.querySelector('[data-view="dashboard"]')?.classList.add('active');
+    activeFilter = null;
+    renderDashboard();
+  } else if (view === 'new') {
+    document.getElementById('v-new').classList.add('active');
+    resetForm();
+  } else if (view === 'detail' && param) {
+    document.getElementById('v-detail').classList.add('active');
+    currentDetailId = param;
+    renderDetail(param);
+  } else if (view === 'history') {
+    document.getElementById('v-history').classList.add('active');
+    document.querySelector('[data-view="history"]')?.classList.add('active');
+    renderHistory();
+  } else {
+    document.getElementById('v-dashboard').classList.add('active');
+    document.querySelector('[data-view="dashboard"]')?.classList.add('active');
+    renderDashboard();
+  }
+}
+
+window.addEventListener('hashchange', route);
+
+// ===================================================================
+// RENDER ATTENTION BAR
+// ===================================================================
+function renderAttention() {
+  const bar = document.getElementById('attentionBar');
+  const items = [];
+  const now = new Date();
+  const todayStr = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  data.forEach(ob => {
+    if (ob.status === 'completed') return;
+
+    // Pending approval
+    if (ob.status === 'pending-approval') {
+      items.push({ id: ob.id, dot: '', text: `${ob.vaName} is ready for pay approval` });
+    }
+
+    // Last day within 3 days and not completed
+    const days = daysDiff(ob.lastDay);
+    if (days >= 0 && days <= 3 && ob.status !== 'completed') {
+      const remaining = STEP_ORDER.length - completedSteps(ob.steps);
+      if (remaining > 0) {
+        const dayLabel = days === 0 ? 'today' : days === 1 ? 'tomorrow' : `in ${days} days`;
+        items.push({ id: ob.id, dot: 'warn', text: `${ob.vaName} last day is ${dayLabel} \u2014 ${remaining} step${remaining > 1 ? 's' : ''} remaining` });
+      }
+    }
+
+    // Stale: last activity more than 3 days ago, not completed
+    if (ob.activity && ob.activity.length > 0) {
+      const lastActivityTs = new Date(ob.activity[0].ts);
+      const staleDays = Math.floor((now - lastActivityTs) / 86400000);
+      if (staleDays >= 3 && ob.status !== 'completed') {
+        items.push({ id: ob.id, dot: 'stale', text: `${ob.vaName}: no progress for ${staleDays} day${staleDays > 1 ? 's' : ''}` });
+      }
+    }
+  });
+
+  if (items.length === 0) {
+    bar.classList.remove('show');
+    bar.innerHTML = '';
+    return;
+  }
+
+  bar.classList.add('show');
+  bar.innerHTML = `<div class="attention-bar-title">Needs attention</div>` +
+    items.map(item =>
+      `<div class="attention-item" onclick="go('detail',${item.id})"><span class="attention-item-dot ${item.dot}"></span>${item.text}</div>`
+    ).join('');
+}
+
+// ===================================================================
+// RENDER DASHBOARD
+// ===================================================================
+function renderDashboard() {
+  let list = data.filter(o => o.status !== 'completed');
+  if (activeFilter) list = list.filter(o => o.status === activeFilter);
+
+  // Update sidebar counts
+  document.getElementById('cntActive').textContent = data.filter(o => o.status === 'in-progress').length;
+  document.getElementById('cntApproval').textContent = data.filter(o => o.status === 'pending-approval').length;
+
+  // Update page meta
+  const active = data.filter(o => o.status !== 'completed').length;
+  const pending = data.filter(o => !o.steps.certSigned.done && o.status !== 'completed').length;
+  const approval = data.filter(o => o.status === 'pending-approval').length;
+  const completed = data.filter(o => o.status === 'completed').length;
+
+  document.getElementById('pageMeta').innerHTML = `
+    <span class="page-meta-stat"><span class="page-meta-dot" style="background:var(--accent)"></span><span class="page-meta-num">${active}</span> active</span>
+    <span class="page-meta-stat"><span class="page-meta-dot" style="background:var(--text-3)"></span><span class="page-meta-num">${pending}</span> pending cert</span>
+    <span class="page-meta-stat"><span class="page-meta-dot" style="background:var(--yellow)"></span><span class="page-meta-num">${approval}</span> needs approval</span>
+    <span class="page-meta-stat"><span class="page-meta-dot" style="background:var(--green)"></span><span class="page-meta-num">${completed}</span> completed</span>
+    ${activeFilter ? `<button class="btn btn-text" onclick="activeFilter=null;renderDashboard()" style="font-size:11px;padding:2px 6px;margin-left:4px">Clear filter</button>` : ''}
+  `;
+
+  // Render attention bar
+  renderAttention();
+
+  if (sortCol) {
+    list.sort((a, b) => {
+      let va = a[sortCol], vb = b[sortCol];
+      if (sortCol === 'finalPay') { va = Number(va); vb = Number(vb); }
+      else if (sortCol === 'lastDay') { va = new Date(va); vb = new Date(vb); }
+      else { va = String(va).toLowerCase(); vb = String(vb).toLowerCase(); }
+      if (va < vb) return sortDir === 'asc' ? -1 : 1;
+      if (va > vb) return sortDir === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }
+
+  // Update header sort indicators
+  document.querySelectorAll('#mainTable th').forEach(th => {
+    th.classList.remove('sorted');
+    const arrow = th.querySelector('.sort-arrow');
+    if (arrow) arrow.textContent = '';
+  });
+  if (sortCol) {
+    const th = document.querySelector(`#mainTable th[data-sort="${sortCol}"]`);
+    if (th) {
+      th.classList.add('sorted');
+      th.querySelector('.sort-arrow').textContent = sortDir === 'asc' ? '\u2191' : '\u2193';
+    }
+  }
+
+  const tbody = document.getElementById('tblBody');
+  if (list.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty">No offboardings found</div></td></tr>`;
+  } else {
+    tbody.innerHTML = list.map(ob => {
+      const rel = relDay(ob.lastDay);
+      const rc = rowClass(ob);
+      return `<tr onclick="go('detail',${ob.id})"${rc ? ` class="${rc}"` : ''}>
+        <td><div class="va-cell"><div class="va-init">${initials(ob.vaName)}</div><div><div class="va-name">${ob.vaName}</div><div class="va-sub">${ob.vaEmail}</div></div></div></td>
+        <td>${ob.client}</td>
+        <td class="muted">${ob.role}</td>
+        <td><span class="mono">${fmtDate(ob.lastDay)}</span> <span style="color:var(--text-3);font-size:11px">${rel}</span></td>
+        <td>${statusText(ob.status)}</td>
+        <td>${certText(ob.steps)}</td>
+        <td>${accessBar(ob.tools)}</td>
+        <td>${payText(ob)}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // If board is visible, render it too
+  if (viewMode === 'board') renderBoard();
+}
+
+// ===================================================================
+// RENDER BOARD (KANBAN)
+// ===================================================================
+function renderBoard() {
+  const boardEl = document.getElementById('boardView');
+  const allActive = data.filter(o => o.status !== 'completed');
+
+  boardEl.innerHTML = BOARD_COLUMNS.map(col => {
+    const items = data.filter(ob => col.test(ob));
+    const cardsHtml = items.length > 0
+      ? items.map(ob => {
+          const done = completedSteps(ob.steps);
+          const total = STEP_ORDER.length;
+          const pct = (done / total) * 100;
+          const fillCls = pct === 100 ? 'done' : '';
+          const rel = relDay(ob.lastDay);
+          return `<div class="board-card" onclick="go('detail',${ob.id})">
+            <div class="board-card-name">${ob.vaName}</div>
+            <div class="board-card-client">${ob.client}</div>
+            <div class="board-card-footer">
+              <span class="board-card-date">${fmtDate(ob.lastDay)} (${rel})</span>
+              <div class="board-card-bar"><div class="board-card-fill ${fillCls}" style="width:${pct}%"></div></div>
+            </div>
+          </div>`;
+        }).join('')
+      : `<div style="padding:12px 8px;font-size:11px;color:var(--text-3)">No items</div>`;
+
+    return `<div class="board-col">
+      <div class="board-col-header">
+        <span>${col.label}</span>
+        <span class="board-col-count">${items.length}</span>
+      </div>
+      <div class="board-col-cards">${cardsHtml}</div>
+    </div>`;
+  }).join('');
+}
+
+function filterBy(status) {
+  activeFilter = activeFilter === status ? null : status;
+  document.querySelectorAll('.sb-item[data-filter]').forEach(el => {
+    el.classList.toggle('active', el.dataset.filter === activeFilter);
+  });
+  renderDashboard();
+}
+
+function sortTable(col) {
+  if (sortCol === col) { sortDir = sortDir === 'asc' ? 'desc' : 'asc'; }
+  else { sortCol = col; sortDir = 'asc'; }
+  renderDashboard();
+}
+
+// ===================================================================
+// SEARCH
+// ===================================================================
+function doSearch(q) {
+  q = q.toLowerCase().trim();
+  const list = data.filter(o => o.status !== 'completed');
+  const filtered = q ? list.filter(o =>
+    o.vaName.toLowerCase().includes(q) ||
+    o.client.toLowerCase().includes(q) ||
+    o.role.toLowerCase().includes(q) ||
+    o.vaEmail.toLowerCase().includes(q)
+  ) : list;
+
+  const tbody = document.getElementById('tblBody');
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty">No results for "${q}"</div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = filtered.map(ob => {
+    const rel = relDay(ob.lastDay);
+    const rc = rowClass(ob);
+    return `<tr onclick="go('detail',${ob.id})"${rc ? ` class="${rc}"` : ''}>
+      <td><div class="va-cell"><div class="va-init">${initials(ob.vaName)}</div><div><div class="va-name">${ob.vaName}</div><div class="va-sub">${ob.vaEmail}</div></div></div></td>
+      <td>${ob.client}</td>
+      <td class="muted">${ob.role}</td>
+      <td><span class="mono">${fmtDate(ob.lastDay)}</span> <span style="color:var(--text-3);font-size:11px">${rel}</span></td>
+      <td>${statusText(ob.status)}</td>
+      <td>${certText(ob.steps)}</td>
+      <td>${accessBar(ob.tools)}</td>
+      <td>${payText(ob)}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ===================================================================
+// CSV EXPORT
+// ===================================================================
+function exportCSV() {
+  const headers = ['ID','VA Name','Email','Phone','Client','Role','Status','Last Day','Final Pay','Reimbursements','Reason','Initiated By','Created'];
+  const rows = data.map(o => [
+    o.id, o.vaName, o.vaEmail, o.vaPhone, o.client, o.role, o.status,
+    o.lastDay, o.finalPay, o.reimbursements || 0, o.reason, o.initiatedBy, o.createdAt
+  ]);
+  const csv = [headers, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `offboardings_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ===================================================================
+// INLINE EDITING
+// ===================================================================
+function inlineEdit(obId, field, el) {
+  const ob = data.find(o => o.id === obId);
+  if (!ob || ob.status === 'completed') return;
+
+  if (field === 'finalPay') {
+    const currentVal = ob.finalPay;
+    el.innerHTML = `<input type="number" class="inline-edit-input" value="${currentVal}" step="0.01" style="width:120px" onblur="saveInlineEdit(${obId},'finalPay',this.value,this)" onkeydown="if(event.key==='Enter'){this.blur()}if(event.key==='Escape'){cancelInlineEdit(${obId},'finalPay',this)}">`;
+    el.querySelector('input').focus();
+    el.querySelector('input').select();
+  } else if (field === 'notes') {
+    const currentVal = ob.notes || '';
+    el.innerHTML = `<textarea class="inline-edit-textarea" onblur="saveInlineEdit(${obId},'notes',this.value,this)" onkeydown="if(event.key==='Escape'){cancelInlineEdit(${obId},'notes',this)}">${currentVal}</textarea>`;
+    el.querySelector('textarea').focus();
+  }
+}
+
+function saveInlineEdit(obId, field, value, inputEl) {
+  const ob = data.find(o => o.id === obId);
+  if (!ob) return;
+
+  if (field === 'finalPay') {
+    const num = parseFloat(value);
+    if (isNaN(num) || num <= 0) {
+      renderDetail(obId);
+      return;
+    }
+    const oldVal = ob.finalPay;
+    ob.finalPay = num;
+    ob.activity.unshift({ action: `Final pay updated from $${oldVal.toLocaleString()} to $${num.toLocaleString()}`, by: "Aldridge Dagos", ts: new Date().toISOString(), type: "user" });
+  } else if (field === 'notes') {
+    ob.notes = value.trim();
+    ob.activity.unshift({ action: `Notes updated`, by: "Aldridge Dagos", ts: new Date().toISOString(), type: "user" });
+  }
+
+  saveData();
+  renderDetail(obId);
+}
+
+function cancelInlineEdit(obId, field, inputEl) {
+  renderDetail(obId);
+}
+
+// ===================================================================
+// DETAIL VIEW
+// ===================================================================
+function renderDetail(id) {
+  const ob = data.find(o => o.id === id);
+  if (!ob) { go('dashboard'); return; }
+
+  document.getElementById('detailPageTitle').textContent = ob.vaName;
+  const rel = relDay(ob.lastDay);
+  const isApproval = ob.status === 'pending-approval';
+  const isComplete = ob.status === 'completed';
+  const isEditable = !isComplete;
+
+  // Vertical timeline steps
+  const stepsHtml = STEP_ORDER.map(key => {
+    const step = ob.steps[key];
+    let cls = 'waiting';
+    if (step.done) cls = 'done';
+    else if (key === activeStep(ob.steps)) cls = 'current';
+    const dateStr = step.date ? `${fmtDate(step.date)} (${relDay(step.date)})` : '';
+    return `<div class="v-step ${cls}">
+      <div class="v-dot">${cls === 'done' ? '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="3 8 6.5 11.5 13 4.5"/></svg>' : cls === 'current' ? '<svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="3"/></svg>' : ''}</div>
+      <div class="v-step-text">
+        <div class="v-step-label">${STEP_LABELS[key]}</div>
+        ${dateStr ? `<div class="v-step-date">${dateStr}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Tool list
+  const revokedCount = ob.tools.filter(t => t.revoked).length;
+  const toolsHtml = ob.tools.map((t, i) => `<div class="tool-row" id="tr-${id}-${i}">
+    <span class="tool-row-name ${t.revoked ? 'struck' : ''}">${t.name}</span>
+    ${!isComplete ? `<div class="tool-sw ${t.revoked ? 'on' : ''}" onclick="toggleTool(${id},${i},event)"></div>` : `<span style="font-size:11px;color:var(--text-3)">${t.revoked ? 'Revoked' : 'Active'}</span>`}
+  </div>`).join('');
+
+  // Activity log
+  const logHtml = ob.activity.map(a => `<div class="log-item">
+    <div class="log-action">${a.action}</div>
+    <div class="log-meta">${a.by} \u00b7 ${fmtTimestamp(a.ts)} (${timeAgo(a.ts)})</div>
+  </div>`).join('');
+
+  // Google Meet section
+  const meetHtml = ob.meetLink
+    ? `<div class="act-link" onclick="window.open('${ob.meetLink}','_blank')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14"/><rect x="1" y="5" width="14" height="14" rx="2"/></svg>
+        <span>Join Google Meet</span>
+        <span class="act-arrow">\u2192</span>
+      </div>`
+    : `<div class="act-link" onclick="createMeet(${ob.id})">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14"/><rect x="1" y="5" width="14" height="14" rx="2"/></svg>
+        <span>Create Google Meet</span>
+        <span class="act-arrow">\u2192</span>
+      </div>`;
+
+  // Actions
+  let actionsHtml = '';
+  if (isApproval) {
+    actionsHtml += `<div class="act-link highlight" onclick="approvePay(${ob.id})">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg>
+      <span>Approve Final Pay ($${ob.finalPay.toLocaleString()})</span>
+      <span class="act-arrow">\u2192</span>
+    </div>`;
+  }
+  actionsHtml += meetHtml;
+  if (!isComplete) {
+    actionsHtml += `<div class="act-link" onclick="sendReminder(${ob.id})">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 4l10 7 10-7"/></svg>
+      <span>Send Reminder Email</span>
+      <span class="act-arrow">\u2192</span>
+    </div>
+    <div class="act-link" onclick="resendDocusign(${ob.id})">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15l2 2 4-4"/></svg>
+      <span>Resend DocuSign</span>
+      <span class="act-arrow">\u2192</span>
+    </div>`;
+  }
+
+  // Build pay field (editable or static)
+  const payDisplay = isEditable
+    ? `<div class="detail-field-value money inline-edit" onclick="inlineEdit(${ob.id},'finalPay',this)">$${ob.finalPay.toLocaleString()}${ob.reimbursements ? ` + $${ob.reimbursements} reimb.` : ''}</div>`
+    : `<div class="detail-field-value money">$${ob.finalPay.toLocaleString()}${ob.reimbursements ? ` + $${ob.reimbursements} reimb.` : ''}</div>`;
+
+  // Build notes field (editable or static)
+  let notesHtml = '';
+  if (ob.notes || isEditable) {
+    const notesContent = isEditable
+      ? `<div class="detail-field-value inline-edit" style="color:var(--text-1)" onclick="inlineEdit(${ob.id},'notes',this)">${ob.notes || '<span style="color:var(--text-3)">Click to add notes</span>'}</div>`
+      : `<div class="detail-field-value" style="color:var(--text-1)">${ob.notes}</div>`;
+    notesHtml = `<div style="grid-column:1/-1"><div class="detail-field-label">Notes</div>${notesContent}</div>`;
+  }
+
+  document.getElementById('detailContent').innerHTML = `
+    <div class="detail-top">
+      <div class="detail-who">
+        <div class="detail-init">${initials(ob.vaName)}</div>
+        <div>
+          <div class="detail-name">${ob.vaName}</div>
+          <div class="detail-sub">${ob.role} at ${ob.client}</div>
+        </div>
+      </div>
+      <div>${statusText(ob.status)}</div>
+    </div>
+
+    <div class="detail-grid">
+      <div>
+        <div class="detail-section">
+          <div class="detail-section-label">Pipeline</div>
+          <div class="v-timeline">${stepsHtml}</div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-label">Details</div>
+          <div class="detail-fields">
+            <div><div class="detail-field-label">Email</div><div class="detail-field-value">${ob.vaEmail}</div></div>
+            <div><div class="detail-field-label">Phone</div><div class="detail-field-value">${ob.vaPhone || 'N/A'}</div></div>
+            <div><div class="detail-field-label">Last Working Day</div><div class="detail-field-value">${fmtDateLong(ob.lastDay)} <span style="color:var(--text-3)">(${rel})</span></div></div>
+            <div><div class="detail-field-label">Final Pay</div>${payDisplay}</div>
+            <div><div class="detail-field-label">Reason</div><div class="detail-field-value">${ob.reason || 'N/A'}</div></div>
+            <div><div class="detail-field-label">Initiated By</div><div class="detail-field-value">${ob.initiatedBy}</div></div>
+            ${notesHtml}
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-label">Tool Access <span style="float:right;font-weight:500;text-transform:none;letter-spacing:0;font-family:var(--mono)">${revokedCount}/${ob.tools.length} revoked</span></div>
+          <div class="tool-list">${toolsHtml}</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="detail-section">
+          <div class="detail-section-label">Actions</div>
+          ${actionsHtml}
+        </div>
+
+        <div class="detail-section" style="margin-top:24px">
+          <div class="detail-section-label">Activity</div>
+          <div class="log-list">${logHtml}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ===================================================================
+// ACTIONS
+// ===================================================================
+function toggleTool(obId, idx, event) {
+  event.stopPropagation();
+  const ob = data.find(o => o.id === obId);
+  if (!ob || ob.status === 'completed') return;
+
+  const tool = ob.tools[idx];
+  const action = tool.revoked ? 'restore access to' : 'revoke access to';
+  if (!confirm(`${action.charAt(0).toUpperCase() + action.slice(1)} ${tool.name} for ${ob.vaName}?`)) return;
+
+  tool.revoked = !tool.revoked;
+
+  // Update DOM directly for responsiveness
+  const row = document.getElementById(`tr-${obId}-${idx}`);
+  if (row) {
+    const nameEl = row.querySelector('.tool-row-name');
+    const sw = row.querySelector('.tool-sw');
+    nameEl.classList.toggle('struck', tool.revoked);
+    sw.classList.toggle('on', tool.revoked);
+  }
+
+  // Check if all revoked
+  const allRevoked = ob.tools.every(t => t.revoked);
+  if (allRevoked && !ob.steps.accessRevoked.done) {
+    ob.steps.accessRevoked = { done: true, date: new Date().toISOString().split('T')[0] };
+    ob.activity.unshift({ action: `All ${ob.tools.length} tool accesses revoked`, by: "Aldridge Dagos", ts: new Date().toISOString(), type: "complete" });
+
+    if (ob.steps.certSigned.done && ob.status === 'in-progress') {
+      ob.status = 'pending-approval';
+    }
+    saveData();
+    renderDetail(obId);
+    return;
+  }
+
+  // If un-revoking, undo the step
+  if (!allRevoked && ob.steps.accessRevoked.done) {
+    ob.steps.accessRevoked = { done: false, date: null };
+    if (ob.status === 'pending-approval') {
+      ob.status = 'in-progress';
+    }
+  }
+
+  ob.activity.unshift({
+    action: `${tool.revoked ? 'Revoked' : 'Restored'} access to ${tool.name}`,
+    by: "Aldridge Dagos", ts: new Date().toISOString(), type: "user"
+  });
+  saveData();
+}
+
+function approvePay(id) {
+  const ob = data.find(o => o.id === id);
+  if (!ob) return;
+  if (!confirm(`Release $${ob.finalPay.toLocaleString()} as final pay to ${ob.vaName}? This completes the offboarding.`)) return;
+
+  ob.steps.payReleased = { done: true, date: new Date().toISOString().split('T')[0] };
+  ob.status = 'completed';
+  ob.activity.unshift({ action: `Final pay released ($${ob.finalPay.toLocaleString()})`, by: "Aldridge Dagos", ts: new Date().toISOString(), type: "complete" });
+  saveData();
+  renderDetail(id);
+}
+
+function createMeet(id) {
+  const ob = data.find(o => o.id === id);
+  if (!ob) return;
+  // Open Google Meet new meeting page
+  window.open('https://meet.google.com/new', '_blank');
+  // Prompt user to paste the link back
+  setTimeout(() => {
+    const link = prompt('Paste the Google Meet link here (or leave blank to skip):');
+    if (link && link.trim()) {
+      ob.meetLink = link.trim();
+      ob.activity.unshift({ action: `Google Meet link added: ${link.trim()}`, by: "Aldridge Dagos", ts: new Date().toISOString(), type: "user" });
+      saveData();
+      renderDetail(id);
+    }
+  }, 1000);
+}
+
+function sendReminder(id) {
+  const ob = data.find(o => o.id === id);
+  if (!ob) return;
+  if (!confirm(`Send reminder email to ${ob.vaName} about pending offboarding items?`)) return;
+  ob.activity.unshift({ action: `Reminder email sent to ${ob.vaName}`, by: "Aldridge Dagos", ts: new Date().toISOString(), type: "system" });
+  saveData();
+  renderDetail(id);
+}
+
+function resendDocusign(id) {
+  const ob = data.find(o => o.id === id);
+  if (!ob) return;
+  if (!confirm(`Resend DocuSign envelope to ${ob.vaName}?`)) return;
+  ob.activity.unshift({ action: "DocuSign envelope resent", by: "Aldridge Dagos", ts: new Date().toISOString(), type: "system" });
+  saveData();
+  renderDetail(id);
+}
+
+// ===================================================================
+// HISTORY
+// ===================================================================
+function renderHistory() {
+  const completed = data.filter(o => o.status === 'completed');
+  const tbody = document.getElementById('histBody');
+  if (completed.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5"><div class="empty">No completed offboardings</div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = completed.map(ob => `<tr onclick="go('detail',${ob.id})">
+    <td><div class="va-cell"><div class="va-init">${initials(ob.vaName)}</div><div><div class="va-name">${ob.vaName}</div><div class="va-sub">${ob.vaEmail}</div></div></div></td>
+    <td>${ob.client}</td>
+    <td class="muted">${ob.role}</td>
+    <td><span class="mono">${ob.steps.payReleased.date ? fmtDate(ob.steps.payReleased.date) : 'N/A'}</span></td>
+    <td style="font-family:var(--mono);color:var(--green);font-weight:600">$${ob.finalPay.toLocaleString()}</td>
+  </tr>`).join('');
+}
+
+// ===================================================================
+// FORM
+// ===================================================================
+function resetForm() {
+  const form = document.getElementById('offboardForm');
+  if (form) form.reset();
+  document.getElementById('toolGrid').innerHTML = '<div class="chip-empty">Select a client to load their tools</div>';
+  selectedTools.clear();
+  document.querySelectorAll('.form-error').forEach(e => e.classList.remove('show'));
+  document.querySelectorAll('.form-input.error, .form-select.error').forEach(e => e.classList.remove('error'));
+  // Set min date
+  const ld = document.getElementById('f_lastday');
+  if (ld) ld.min = new Date().toISOString().split('T')[0];
+}
+
+function loadTools() {
+  const client = document.getElementById('f_client').value;
+  const grid = document.getElementById('toolGrid');
+  selectedTools.clear();
+
+  if (!client || !CLIENT_TOOLS[client]) {
+    grid.innerHTML = '<div class="chip-empty">Select a client to load their tools</div>';
+    return;
+  }
+
+  const tools = CLIENT_TOOLS[client];
+  tools.forEach(t => selectedTools.add(t));
+  grid.innerHTML = tools.map(t => `<div class="chip on" onclick="toggleChip(this,'${t}')"><span>${t}</span><span class="chip-x">\u2715</span></div>`).join('');
+}
+
+function toggleChip(el, tool) {
+  el.classList.toggle('on');
+  if (selectedTools.has(tool)) { selectedTools.delete(tool); }
+  else { selectedTools.add(tool); }
+}
+
+function submitForm(e) {
+  e.preventDefault();
+
+  // Clear previous errors
+  document.querySelectorAll('.form-error').forEach(el => el.classList.remove('show'));
+  document.querySelectorAll('.form-input.error, .form-select.error').forEach(el => el.classList.remove('error'));
+
+  const fields = {
+    name: document.getElementById('f_name').value.trim(),
+    email: document.getElementById('f_email').value.trim(),
+    phone: document.getElementById('f_phone').value.trim(),
+    client: document.getElementById('f_client').value,
+    role: document.getElementById('f_role').value.trim(),
+    lastday: document.getElementById('f_lastday').value,
+    reason: document.getElementById('f_reason').value,
+    pay: parseFloat(document.getElementById('f_pay').value) || 0,
+    reimb: parseFloat(document.getElementById('f_reimb').value) || 0,
+    notes: document.getElementById('f_notes').value.trim()
+  };
+
+  let hasError = false;
+  function showErr(field, inputId) {
+    document.getElementById('e_' + field).classList.add('show');
+    document.getElementById(inputId).classList.add('error');
+    hasError = true;
+  }
+
+  if (!fields.name) showErr('name', 'f_name');
+  if (!fields.email || !fields.email.includes('@')) showErr('email', 'f_email');
+  if (!fields.client) showErr('client', 'f_client');
+  if (!fields.role) showErr('role', 'f_role');
+  if (!fields.lastday) showErr('lastday', 'f_lastday');
+  if (!fields.pay || fields.pay <= 0) showErr('pay', 'f_pay');
+
+  if (selectedTools.size === 0 && fields.client) {
+    alert('Select at least one tool to track for revocation.');
+    hasError = true;
+  }
+
+  if (hasError) return;
+
+  const today = new Date().toISOString().split('T')[0];
+  const newId = data.length > 0 ? Math.max(...data.map(o => o.id)) + 1 : 1;
+
+  const newOb = {
+    id: newId,
+    vaName: fields.name,
+    vaEmail: fields.email,
+    vaPhone: fields.phone,
+    client: fields.client,
+    role: fields.role,
+    lastDay: fields.lastday,
+    finalPay: fields.pay,
+    reimbursements: fields.reimb,
+    status: 'in-progress',
+    notes: fields.notes,
+    initiatedBy: 'Hanes Abasola',
+    reason: fields.reason,
+    createdAt: today,
+    steps: {
+      initiated: { done: true, date: today },
+      notified: { done: true, date: today },
+      callScheduled: { done: false, date: null },
+      certSigned: { done: false, date: null },
+      accessRevoked: { done: false, date: null },
+      payReleased: { done: false, date: null }
+    },
+    tools: Array.from(selectedTools).map(name => ({ name, revoked: false })),
+    meetLink: null,
+    activity: [
+      { action: "DocuSign envelope sent", by: "System", ts: new Date().toISOString(), type: "system" },
+      { action: "Google Meet scheduling link sent", by: "System", ts: new Date().toISOString(), type: "system" },
+      { action: "Notification email sent to VA", by: "System", ts: new Date().toISOString(), type: "system" },
+      { action: "Offboarding initiated", by: "Hanes Abasola", ts: new Date().toISOString(), type: "system" }
+    ]
+  };
+
+  data.push(newOb);
+  saveData();
+  go('detail', newId);
+}
+
+// ===================================================================
+// KEYBOARD SHORTCUTS
+// ===================================================================
+document.addEventListener('keydown', (e) => {
+  // Don't trigger shortcuts when typing in inputs
+  const tag = e.target.tagName;
+  const isInput = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+
+  if (e.key === 'Escape') {
+    const kbd = document.getElementById('kbdOverlay');
+    if (kbd.classList.contains('show')) { kbd.classList.remove('show'); return; }
+    if (isInput) { e.target.blur(); return; }
+    const hash = window.location.hash;
+    if (hash && hash !== '#dashboard') { go('dashboard'); }
+    return;
+  }
+
+  if (isInput) return;
+
+  if (e.key === '/' && !e.metaKey && !e.ctrlKey) {
+    e.preventDefault();
+    document.getElementById('searchInput')?.focus();
+    return;
+  }
+
+  if (e.key === '?' && e.shiftKey) {
+    e.preventDefault();
+    document.getElementById('kbdOverlay').classList.toggle('show');
+    return;
+  }
+
+  if (e.key === 'n' || e.key === 'N') {
+    if (!e.metaKey && !e.ctrlKey) { go('new'); return; }
+  }
+
+  // V key toggles table/board on dashboard
+  if ((e.key === 'v' || e.key === 'V') && !e.metaKey && !e.ctrlKey) {
+    const hash = window.location.hash || '#dashboard';
+    if (hash === '#dashboard' || hash === '') {
+      toggleView(viewMode === 'table' ? 'board' : 'table');
+      return;
+    }
+  }
+
+  if (e.key === 'g' || e.key === 'G') {
+    lastKeyG = Date.now();
+    return;
+  }
+
+  if (Date.now() - lastKeyG < 800) {
+    if (e.key === 'd' || e.key === 'D') { go('dashboard'); lastKeyG = 0; return; }
+    if (e.key === 'h' || e.key === 'H') { go('history'); lastKeyG = 0; return; }
+  }
+});
+
+// ===================================================================
+// INIT
+// ===================================================================
+document.addEventListener('DOMContentLoaded', () => {
+  loadData();
+  route();
+});
+</script>
+</body>
+</html>
