@@ -300,6 +300,7 @@
     .rpt-metrics { display: flex; align-items: flex-start; gap: 0; padding: 0 0 32px; }
     .rpt-metric { flex: 1; padding: 0 24px; }
     .rpt-metric:not(:last-child) { border-right: 1px solid var(--border-0); }
+    .rpt-metric:first-child { padding-left: 0; }
     .rpt-metric-num { font-family: var(--mono); font-size: 32px; font-weight: 600; color: var(--text-0); line-height: 1; letter-spacing: -0.04em; }
     .rpt-metric-label { font-size: 10px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 6px; }
 
@@ -307,42 +308,46 @@
     .rpt-section-label { font-size: 10px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 16px; }
 
     .rpt-bar-chart { position: relative; }
-    .rpt-bar-chart svg { display: block; width: 100%; }
+    .rpt-bar-chart-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .rpt-bar-chart svg { display: block; }
     .rpt-bar-chart svg text { font-family: var(--mono); }
-    .rpt-bar-chart svg .bar-rect { fill: var(--accent); opacity: 0.7; transition: opacity 0.1s; cursor: default; }
+    .rpt-bar-chart svg .bar-rect { fill: #4F8EBF; opacity: 0.8; transition: opacity 0.15s; cursor: default; }
     .rpt-bar-chart svg .bar-rect:hover { opacity: 1; }
+    .rpt-bar-chart svg .plot-bg { fill: rgba(255,255,255,0.02); }
     .rpt-bar-chart svg .axis-line { stroke: var(--border-0); stroke-width: 1; }
     .rpt-bar-chart svg .axis-text { fill: var(--text-3); font-size: 11px; }
-    .rpt-bar-chart svg .bar-val { fill: var(--text-2); font-size: 11px; font-weight: 500; }
+    .rpt-bar-chart svg .bar-val { fill: var(--text-1); font-size: 11px; font-weight: 600; }
     .rpt-bar-chart svg .grid-line { stroke: var(--border-0); stroke-width: 1; stroke-dasharray: 3 3; }
 
-    .rpt-hbar-row { display: flex; align-items: center; gap: 12px; padding: 6px 0; }
+    .rpt-hbar-row { display: flex; align-items: center; gap: 12px; padding: 7px 0; }
+    .rpt-hbar-row:nth-child(even) { background: rgba(255,255,255,0.015); }
     .rpt-hbar-label { width: 160px; flex-shrink: 0; font-size: 13px; font-weight: 500; color: var(--text-1); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .rpt-hbar-track { flex: 1; height: 18px; background: var(--bg-2); border-radius: 3px; overflow: hidden; position: relative; }
-    .rpt-hbar-fill { height: 100%; background: var(--accent); opacity: 0.7; border-radius: 3px; transition: opacity 0.1s; min-width: 2px; }
+    .rpt-hbar-track { flex: 1; height: 22px; background: var(--bg-2); border-radius: 3px; overflow: hidden; position: relative; display: flex; align-items: center; }
+    .rpt-hbar-fill { height: 100%; opacity: 0.8; border-radius: 3px; transition: opacity 0.15s; min-width: 2px; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; }
     .rpt-hbar-fill:hover { opacity: 1; }
-    .rpt-hbar-fill.green { background: var(--green); }
-    .rpt-hbar-fill.gold { background: var(--gold); }
-    .rpt-hbar-fill.blue { background: var(--blue); }
+    .rpt-hbar-fill-count { font-family: var(--mono); font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.9); }
     .rpt-hbar-count { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--text-2); width: 28px; text-align: right; flex-shrink: 0; }
+    .rpt-hbar-count-outside { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--text-2); margin-left: 8px; white-space: nowrap; }
 
-    .rpt-donut-wrap { display: flex; align-items: flex-start; gap: 40px; }
-    .rpt-donut { position: relative; width: 200px; height: 200px; flex-shrink: 0; }
+    .rpt-donut-wrap { display: flex; align-items: center; gap: 32px; }
+    .rpt-donut { position: relative; width: 180px; height: 180px; flex-shrink: 0; }
     .rpt-donut-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
-    .rpt-donut-center-num { font-family: var(--mono); font-size: 28px; font-weight: 600; color: var(--text-0); line-height: 1; }
+    .rpt-donut-center-num { font-family: var(--mono); font-size: 36px; font-weight: 700; color: var(--text-0); line-height: 1; }
     .rpt-donut-center-label { font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
-    .rpt-legend { display: flex; flex-direction: column; gap: 8px; padding-top: 8px; }
+    .rpt-legend { display: flex; flex-direction: column; gap: 8px; padding-top: 0; }
     .rpt-legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: var(--text-1); }
     .rpt-legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
     .rpt-legend-count { font-family: var(--mono); font-size: 12px; color: var(--text-3); margin-left: auto; }
 
+    .rpt-step-bars .rpt-hbar-row:nth-child(even) { background: none; }
     .rpt-step-bars .rpt-hbar-label { width: 200px; font-size: 12px; color: var(--text-2); }
+    .rpt-step-bars .rpt-hbar-track { height: 20px; }
     .rpt-step-bars .rpt-hbar-count { width: 48px; font-size: 11px; }
 
     .rpt-timeline { display: flex; flex-direction: column; gap: 0; }
-    .rpt-tl-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border-0); }
+    .rpt-tl-item { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border-0); }
     .rpt-tl-item:last-child { border-bottom: none; }
-    .rpt-tl-init { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 10px; background: var(--bg-3); color: var(--text-1); flex-shrink: 0; }
+    .rpt-tl-init { width: 26px; height: 26px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 9px; background: var(--bg-3); color: var(--text-1); flex-shrink: 0; }
     .rpt-tl-info { flex: 1; min-width: 0; }
     .rpt-tl-name { font-size: 13px; font-weight: 600; color: var(--text-0); }
     .rpt-tl-sub { font-size: 11px; color: var(--text-3); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -350,7 +355,57 @@
     .rpt-tl-date { font-family: var(--mono); font-size: 11px; color: var(--text-2); }
     .rpt-tl-dur { font-family: var(--mono); font-size: 11px; color: var(--text-3); margin-top: 1px; }
 
-    .rpt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    .rpt-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 40px; }
+
+    .rpt-export-row { display: flex; align-items: center; gap: 8px; }
+
+    /* === Print Styles === */
+    @media print {
+      *, *::before, *::after { color-adjust: exact; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body { background: white; color: #111; font-size: 11px; }
+      .sidebar, .mobile-toggle, .sidebar-backdrop, .page-actions, .rpt-export-row, .form-back, .kbd-overlay { display: none !important; }
+      .main { margin-left: 0; }
+      .page-header { padding: 0; }
+      .content { padding: 0; }
+      .view { display: none !important; }
+      #v-reports { display: block !important; }
+      .rpt-metrics { border-bottom: 1px solid #ddd; padding-bottom: 16px; margin-bottom: 16px; }
+      .rpt-metric { padding: 0 16px; }
+      .rpt-metric-num { color: #111; font-size: 24px; }
+      .rpt-metric-label { color: #666; }
+      .rpt-section { margin-bottom: 24px; page-break-inside: avoid; }
+      .rpt-section-label { color: #666; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+      .rpt-bar-chart svg .bar-rect { fill: #4F8EBF; opacity: 1; }
+      .rpt-bar-chart svg .grid-line { stroke: #ddd; }
+      .rpt-bar-chart svg .axis-text { fill: #666; }
+      .rpt-bar-chart svg .bar-val { fill: #333; }
+      .rpt-hbar-track { background: #f0f0f0; }
+      .rpt-hbar-label { color: #333; }
+      .rpt-hbar-count, .rpt-hbar-count-outside { color: #666; }
+      .rpt-hbar-fill-count { color: white; }
+      .rpt-tl-item { border-color: #eee; }
+      .rpt-tl-init { background: #eee; color: #666; }
+      .rpt-tl-name { color: #111; }
+      .rpt-tl-sub { color: #888; }
+      .rpt-tl-date, .rpt-tl-dur { color: #666; }
+      .rpt-grid { gap: 24px; }
+      .rpt-donut-center-num { color: #111; }
+      .rpt-donut-center-label { color: #666; }
+      .rpt-legend-item { color: #333; }
+      .rpt-legend-count { color: #888; }
+      .page-title { font-size: 18px; color: #111; }
+      .print-header { display: flex !important; align-items: center; gap: 12px; padding: 16px 0; border-bottom: 2px solid #111; margin-bottom: 20px; }
+      .print-header img { width: 28px; height: auto; }
+      .print-header-text { font-size: 16px; font-weight: 800; color: #111; }
+      .print-header-sub { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 0.06em; }
+      .print-footer { display: block !important; text-align: center; font-size: 9px; color: #999; padding-top: 16px; border-top: 1px solid #ddd; margin-top: 24px; }
+      .print-tables { display: block !important; }
+      .print-tables table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 10px; }
+      .print-tables th { text-align: left; padding: 4px 8px; background: #f5f5f5; border: 1px solid #ddd; font-weight: 600; color: #333; font-size: 9px; text-transform: uppercase; letter-spacing: 0.04em; }
+      .print-tables td { padding: 4px 8px; border: 1px solid #eee; color: #333; }
+      .print-tables .pt-label { font-size: 11px; font-weight: 600; color: #333; margin: 16px 0 6px; }
+    }
+    .print-header, .print-footer, .print-tables { display: none; }
 
     /* === Responsive === */
 
@@ -386,6 +441,8 @@
       .rpt-hbar-label { width: 120px; font-size: 12px; }
       .rpt-step-bars .rpt-hbar-label { width: 160px; font-size: 11px; }
       .rpt-donut-wrap { gap: 24px; }
+      .rpt-export-row { width: 100%; }
+      .rpt-export-row .btn { flex: 1; }
 
       /* Table: horizontal scroll with card-like feel */
       .tbl-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -16px; padding: 0 16px; }
@@ -410,6 +467,7 @@
       /* Reports mobile */
       .rpt-metrics { flex-wrap: wrap; gap: 20px 0; }
       .rpt-metric { flex: 0 0 50%; padding: 0 16px; }
+      .rpt-metric:first-child { padding-left: 0; }
       .rpt-metric:nth-child(odd) { padding-left: 0; }
       .rpt-metric:nth-child(even) { padding-right: 0; }
       .rpt-metric:not(:last-child) { border-right: none; }
@@ -417,15 +475,18 @@
       .rpt-metric:nth-child(even):not(:nth-last-child(-n+2)) { border-bottom: 1px solid var(--border-0); padding-bottom: 16px; }
       .rpt-metric:nth-child(n+3) { padding-top: 16px; }
       .rpt-metric-num { font-size: 26px; }
-      .rpt-donut-wrap { flex-direction: column; align-items: center; gap: 20px; }
-      .rpt-donut { width: 160px; height: 160px; }
-      .rpt-donut-center-num { font-size: 22px; }
-      .rpt-legend { flex-direction: row; flex-wrap: wrap; gap: 6px 16px; }
+      .rpt-donut-wrap { flex-direction: column; align-items: center; gap: 16px; }
+      .rpt-donut { width: 140px; height: 140px; }
+      .rpt-donut-center-num { font-size: 24px; }
+      .rpt-legend { flex-direction: row; flex-wrap: wrap; gap: 6px 16px; display: grid; grid-template-columns: 1fr 1fr; }
       .rpt-hbar-label { width: 100px; font-size: 11px; }
       .rpt-step-bars .rpt-hbar-label { width: 130px; font-size: 10px; }
       .rpt-grid { grid-template-columns: 1fr; gap: 0; }
-      .rpt-bar-chart { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .rpt-bar-chart-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .rpt-tl-sub { font-size: 10px; }
+      .rpt-tl-item { padding: 6px 0; }
+      .rpt-export-row { flex-direction: column; }
+      .rpt-export-row .btn { width: 100%; }
 
       /* Hide table, show mobile cards */
       .tbl-scroll { display: none; }
@@ -668,12 +729,22 @@
                   <label class="form-label">Client</label>
                   <select class="form-select" required id="f_client" onchange="loadTools()">
                     <option value="">Select client</option>
+                    <option>ArchMoving LLC</option>
                     <option>Armor Capital Group</option>
-                    <option>Nexus Realty</option>
-                    <option>Summit Partners</option>
+                    <option>Brad Freeman</option>
+                    <option>Bradford Real Estate LLC</option>
+                    <option>BranchWater Partners</option>
+                    <option>Cabling Innovations</option>
+                    <option>CaseMovers</option>
+                    <option>Eye Consultants</option>
                     <option>Horizon Digital</option>
-                    <option>Pacific Coast Ventures</option>
+                    <option>Internal</option>
                     <option>Meridian Group</option>
+                    <option>Nexus Realty</option>
+                    <option>Pacific Coast Ventures</option>
+                    <option>Southern Domestic Divas</option>
+                    <option>Summit Partners</option>
+                    <option>Undisclosed</option>
                   </select>
                   <span class="form-error" id="e_client">Client is required</span>
                 </div>
@@ -754,15 +825,33 @@
 
     <!-- ===== Reports ===== -->
     <section id="v-reports" class="view">
+      <div class="print-header">
+        <img src="./logo.png" alt="Ten80Ten">
+        <div>
+          <div class="print-header-text">Ten80Ten</div>
+          <div class="print-header-sub">Offboarding Report</div>
+        </div>
+      </div>
       <div class="page-header">
         <div class="page-header-row">
           <h1 class="page-title">Reports</h1>
+          <div class="page-actions rpt-export-row">
+            <button class="btn btn-ghost" onclick="exportReportCSV()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export CSV
+            </button>
+            <button class="btn btn-ghost" onclick="exportReportPDF()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              Export PDF
+            </button>
+          </div>
         </div>
         <div style="padding-bottom:24px;border-bottom:1px solid var(--border-0);margin-bottom:24px">
           <span style="font-size:12px;color:var(--text-3)">Analytics computed from all offboarding records</span>
         </div>
       </div>
       <div class="content" id="reportsContent"></div>
+      <div class="print-footer">Generated on <span id="printDate"></span> by Ten80Ten Offboarding System</div>
     </section>
 
     <!-- ===== History ===== -->
@@ -828,7 +917,17 @@ const CLIENT_TOOLS = {
   "Summit Partners": ["Microsoft Email","Teams","LastPass","Salesforce","Zendesk","Slack"],
   "Horizon Digital": ["Gmail","Google Meet","Slack","Hootsuite","Canva","WordPress","Google Analytics","Mailchimp","Buffer","Figma"],
   "Pacific Coast Ventures": ["Gmail","Google Meet","Slack","Monday.com","Canva","HubSpot","Asana"],
-  "Meridian Group": ["Microsoft Email","Teams","SharePoint","LastPass","Salesforce","Zendesk","Slack","Asana"]
+  "Meridian Group": ["Microsoft Email","Teams","SharePoint","LastPass","Salesforce","Zendesk","Slack","Asana"],
+  "Internal": ["Gmail","Google Meet","Slack","Canva","LinkedIn Sales Nav","Calendly","Notion"],
+  "Undisclosed": ["Gmail","Google Meet","Canva"],
+  "ArchMoving LLC": ["Gmail","Google Meet","Slack","LastPass","Canva"],
+  "CaseMovers": ["Gmail","Google Meet","Canva","LastPass"],
+  "Bradford Real Estate LLC": ["Gmail","Google Meet","LastPass","Canva","Calendly"],
+  "Brad Freeman": ["Gmail","Google Meet","LastPass","Canva","Calendly"],
+  "Cabling Innovations": ["Gmail","Google Meet","LastPass","Canva"],
+  "BranchWater Partners": ["Gmail","Google Meet","HubSpot","LinkedIn Sales Nav","Canva"],
+  "Eye Consultants": ["Gmail","Google Meet","Canva"],
+  "Southern Domestic Divas": ["Gmail","Google Meet","Canva"]
 };
 
 // Real offboarding data from Gmail records
@@ -878,7 +977,7 @@ const SEED_DATA = [
   },
   {
     id: 4, vaName: "John Michael Fernandez", vaEmail: "mike.ten80ten@gmail.com", vaPhone: "",
-    client: "Ten80Ten", role: "Business Development Manager", lastDay: "2026-02-23", finalPay: 0, reimbursements: 0,
+    client: "Internal", role: "Business Development Manager", lastDay: "2026-02-23", finalPay: 0, reimbursements: 0,
     status: "completed", notes: "Google Meet recording included in email", initiatedBy: "Hanes Abasola", reason: "Contract ended",
     createdAt: "2026-02-20", steps: DONE_STEPS("2026-02-20","2026-02-25"),
     tools: DONE_TOOLS(["Gmail","Google Meet","Slack","Canva","LinkedIn Sales Nav"]),
@@ -918,7 +1017,7 @@ const SEED_DATA = [
   },
   {
     id: 9, vaName: "Marisse De Los Santos", vaEmail: "marisse.ten80ten@gmail.com", vaPhone: "",
-    client: "Ten80Ten", role: "Recruitment Manager", lastDay: "2025-11-08", finalPay: 0, reimbursements: 0,
+    client: "Internal", role: "Recruitment Manager", lastDay: "2025-11-08", finalPay: 0, reimbursements: 0,
     status: "completed", notes: "Zoom meeting link for offboarding call", initiatedBy: "Hanes Abasola", reason: "Contract ended",
     createdAt: "2025-11-05", steps: DONE_STEPS("2025-11-05","2025-11-10"),
     tools: DONE_TOOLS(["Gmail","Google Meet","Slack","Canva","LinkedIn Sales Nav","Calendly"]),
@@ -934,7 +1033,7 @@ const SEED_DATA = [
   },
   {
     id: 11, vaName: "John Christian Diomaro", vaEmail: "johnchristiandiomaro@gmail.com", vaPhone: "",
-    client: "Ten80Ten", role: "Virtual Assistant", lastDay: "2025-08-01", finalPay: 0, reimbursements: 0,
+    client: "Undisclosed", role: "Virtual Assistant", lastDay: "2025-08-01", finalPay: 0, reimbursements: 0,
     status: "completed", notes: "VA was unresponsive via WhatsApp and personal messages. Follow-up sent via email.", initiatedBy: "Hanes Abasola", reason: "VA resigned",
     createdAt: "2025-07-28", steps: DONE_STEPS("2025-07-28","2025-08-07"),
     tools: DONE_TOOLS(["Gmail","Google Meet"]),
@@ -950,7 +1049,7 @@ const SEED_DATA = [
   },
   {
     id: 13, vaName: "Joyce Remonde", vaEmail: "jgremonde@gmail.com", vaPhone: "",
-    client: "Ten80Ten", role: "Virtual Assistant", lastDay: "2025-07-25", finalPay: 0, reimbursements: 0,
+    client: "Undisclosed", role: "Virtual Assistant", lastDay: "2025-07-25", finalPay: 0, reimbursements: 0,
     status: "completed", notes: "VA submitted ID and data deletion certificate via email", initiatedBy: "Hanes Abasola", reason: "Contract ended",
     createdAt: "2025-07-22", steps: DONE_STEPS("2025-07-22","2025-07-28"),
     tools: DONE_TOOLS(["Gmail","Google Meet","Canva"]),
@@ -958,7 +1057,7 @@ const SEED_DATA = [
   },
   {
     id: 14, vaName: "Joness Sembrano", vaEmail: "jonessuaybaguio@gmail.com", vaPhone: "",
-    client: "Ten80Ten", role: "Virtual Assistant", lastDay: "2025-07-22", finalPay: 0, reimbursements: 0,
+    client: "Internal", role: "Virtual Assistant", lastDay: "2025-07-22", finalPay: 0, reimbursements: 0,
     status: "completed", notes: "Quick offboarding call, majority of checklist accomplished prior", initiatedBy: "Hanes Abasola", reason: "Contract ended",
     createdAt: "2025-07-20", steps: DONE_STEPS("2025-07-20","2025-07-24"),
     tools: DONE_TOOLS(["Gmail","Google Meet","Canva","Notion"]),
@@ -966,7 +1065,7 @@ const SEED_DATA = [
   },
   {
     id: 15, vaName: "Karissa Mae Paradeza", vaEmail: "karissa.ten80ten@gmail.com", vaPhone: "",
-    client: "Ten80Ten", role: "Virtual Assistant", lastDay: "2025-05-23", finalPay: 0, reimbursements: 0,
+    client: "ArchMoving LLC", role: "Virtual Assistant", lastDay: "2025-05-23", finalPay: 0, reimbursements: 0,
     status: "completed", notes: "VA completed offboarding checklist and transition summary proactively", initiatedBy: "Hanes Abasola", reason: "VA resigned",
     createdAt: "2025-05-20", steps: DONE_STEPS("2025-05-20","2025-05-25"),
     tools: DONE_TOOLS(["Gmail","Google Meet","Canva"]),
@@ -982,7 +1081,7 @@ const SEED_DATA = [
   },
   {
     id: 17, vaName: "Lia", vaEmail: "lia.ten80ten@gmail.com", vaPhone: "",
-    client: "Ten80Ten", role: "Virtual Assistant", lastDay: "2025-06-01", finalPay: 0, reimbursements: 0,
+    client: "Undisclosed", role: "Virtual Assistant", lastDay: "2025-06-01", finalPay: 0, reimbursements: 0,
     status: "completed", notes: "Offboarding checklist accomplished, pending final confirmation", initiatedBy: "Hanes Abasola", reason: "Contract ended",
     createdAt: "2025-05-28", steps: DONE_STEPS("2025-05-28","2025-06-03"),
     tools: DONE_TOOLS(["Gmail","Google Meet","Canva"]),
@@ -1027,7 +1126,7 @@ let viewMode = 'table';
 // ===================================================================
 // PERSISTENCE
 // ===================================================================
-const STORAGE_KEY = 'ten80ten_offboard_v2';
+const STORAGE_KEY = 'ten80ten_offboard_v3';
 
 function loadData() {
   try {
@@ -1604,6 +1703,11 @@ function renderDetail(id) {
       <span class="act-arrow">\u2192</span>
     </div>`;
   }
+  actionsHtml += `<div class="act-link" onclick="exportDetailCSV(${ob.id})">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    <span>Export Record</span>
+    <span class="act-arrow">\u2192</span>
+  </div>`;
 
   // Build pay field (editable or static)
   const payDisplay = isEditable
@@ -1774,14 +1878,34 @@ function resendDocusign(id) {
 // ===================================================================
 // REPORTS
 // ===================================================================
+const RPT_COLORS = {
+  blue: '#4F8EBF',
+  green: '#6B9E78',
+  amber: '#B8864F',
+  purple: '#8F7BB6',
+  red: '#D46B6B'
+};
+const RPT_CLIENT_PALETTE = [RPT_COLORS.blue, RPT_COLORS.green, RPT_COLORS.amber, RPT_COLORS.purple];
+const RPT_DONUT_PALETTE = [RPT_COLORS.blue, RPT_COLORS.green, RPT_COLORS.amber, RPT_COLORS.purple, RPT_COLORS.red];
+
+function stepDurationColor(days) {
+  if (days <= 1) return RPT_COLORS.green;
+  if (days <= 3) return RPT_COLORS.amber;
+  return RPT_COLORS.red;
+}
+
 function renderReports() {
   const completed = data.filter(o => o.status === 'completed');
   const all = data;
 
+  // Update print date
+  const pdEl = document.getElementById('printDate');
+  if (pdEl) pdEl.textContent = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
   // --- 1. Key Metrics ---
   const totalOffboarded = completed.length;
 
-  // Avg duration: createdAt to payReleased date
+  // Avg duration
   let totalDays = 0;
   let countDays = 0;
   completed.forEach(ob => {
@@ -1796,11 +1920,18 @@ function renderReports() {
   });
   const avgDuration = countDays > 0 ? (totalDays / countDays).toFixed(1) : '0';
 
-  // Most active client
+  // Most active client (EXCLUDE Internal and Undisclosed)
   const clientCounts = {};
   all.forEach(ob => { clientCounts[ob.client] = (clientCounts[ob.client] || 0) + 1; });
   const clientEntries = Object.entries(clientCounts).sort((a, b) => b[1] - a[1]);
-  const topClient = clientEntries.length > 0 ? clientEntries[0][0] : 'N/A';
+
+  const externalClientEntries = clientEntries.filter(([name]) => name !== 'Internal' && name !== 'Undisclosed');
+  let topClientDisplay = 'N/A';
+  if (externalClientEntries.length > 0) {
+    const topCount = externalClientEntries[0][1];
+    const ties = externalClientEntries.filter(([, c]) => c === topCount);
+    topClientDisplay = ties.map(([n]) => n).join(', ');
+  }
 
   // Busiest month
   const monthCounts = {};
@@ -1817,63 +1948,75 @@ function renderReports() {
   const monthEntries = Object.entries(monthCounts).sort((a, b) => b[1].count - a[1].count);
   const busiestMonth = monthEntries.length > 0 ? monthEntries[0][1].label : 'N/A';
 
-  // --- 2. Offboardings Per Month (SVG Bar Chart) ---
+  // --- 2. Offboardings Per Month (SVG Bar Chart, FULL WIDTH, taller) ---
   const monthData = Object.entries(monthCounts)
     .sort((a, b) => a[0].localeCompare(b[0]))
     .map(([key, val]) => ({ key, label: val.label.split(' ')[0], fullLabel: val.label, count: val.count }));
 
   const maxMonthCount = Math.max(...monthData.map(m => m.count), 1);
-  const chartW = Math.max(monthData.length * 56, 320);
-  const chartH = 180;
-  const chartPadL = 32;
+  const chartW = Math.max(monthData.length * 64, 480);
+  const chartH = 260;
+  const chartPadL = 36;
   const chartPadR = 16;
-  const chartPadT = 16;
-  const chartPadB = 28;
+  const chartPadT = 24;
+  const chartPadB = 32;
   const plotW = chartW - chartPadL - chartPadR;
   const plotH = chartH - chartPadT - chartPadB;
-  const barW = Math.min(28, (plotW / monthData.length) * 0.6);
+  const barW = Math.min(32, (plotW / monthData.length) * 0.55);
   const barGap = plotW / monthData.length;
 
-  // Y-axis gridlines
   const yTicks = [];
   const yStep = maxMonthCount <= 4 ? 1 : Math.ceil(maxMonthCount / 4);
   for (let i = 0; i <= maxMonthCount; i += yStep) yTicks.push(i);
   if (yTicks[yTicks.length - 1] < maxMonthCount) yTicks.push(maxMonthCount);
 
   let svgBars = '';
+  // Plot area background
+  svgBars += `<rect class="plot-bg" x="${chartPadL}" y="${chartPadT}" width="${plotW}" height="${plotH}" rx="2"/>`;
   // Grid lines
   yTicks.forEach(tick => {
     const y = chartPadT + plotH - (tick / maxMonthCount) * plotH;
     svgBars += `<line class="grid-line" x1="${chartPadL}" y1="${y}" x2="${chartW - chartPadR}" y2="${y}"/>`;
     svgBars += `<text class="axis-text" x="${chartPadL - 8}" y="${y + 4}" text-anchor="end">${tick}</text>`;
   });
-  // Baseline
   svgBars += `<line class="axis-line" x1="${chartPadL}" y1="${chartPadT + plotH}" x2="${chartW - chartPadR}" y2="${chartPadT + plotH}"/>`;
 
-  // Bars
+  // Bars with rounded tops only
   monthData.forEach((m, i) => {
     const x = chartPadL + i * barGap + (barGap - barW) / 2;
     const barH = (m.count / maxMonthCount) * plotH;
     const y = chartPadT + plotH - barH;
-    svgBars += `<rect class="bar-rect" x="${x}" y="${y}" width="${barW}" height="${barH}" rx="2"><title>${m.fullLabel}: ${m.count}</title></rect>`;
-    svgBars += `<text class="bar-val" x="${x + barW / 2}" y="${y - 5}" text-anchor="middle">${m.count}</text>`;
-    svgBars += `<text class="axis-text" x="${x + barW / 2}" y="${chartPadT + plotH + 16}" text-anchor="middle">${m.label}</text>`;
+    const r = 3;
+    // Custom path: rounded top-left and top-right, flat bottom
+    if (barH > r * 2) {
+      svgBars += `<path class="bar-rect" d="M${x},${y + r} Q${x},${y} ${x + r},${y} L${x + barW - r},${y} Q${x + barW},${y} ${x + barW},${y + r} L${x + barW},${chartPadT + plotH} L${x},${chartPadT + plotH} Z"><title>${m.fullLabel}: ${m.count}</title></path>`;
+    } else {
+      svgBars += `<rect class="bar-rect" x="${x}" y="${y}" width="${barW}" height="${barH}"><title>${m.fullLabel}: ${m.count}</title></rect>`;
+    }
+    svgBars += `<text class="bar-val" x="${x + barW / 2}" y="${y - 8}" text-anchor="middle">${m.count}</text>`;
+    svgBars += `<text class="axis-text" x="${x + barW / 2}" y="${chartPadT + plotH + 18}" text-anchor="middle">${m.label}</text>`;
   });
 
-  const barChartSvg = `<svg viewBox="0 0 ${chartW} ${chartH}" width="${chartW}" height="${chartH}" xmlns="http://www.w3.org/2000/svg">${svgBars}</svg>`;
+  const barChartSvg = `<svg viewBox="0 0 ${chartW} ${chartH}" width="100%" height="${chartH}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">${svgBars}</svg>`;
 
-  // --- 3. By Client (Horizontal Bars) ---
+  // --- 3. By Client (Horizontal Bars, varied colors) ---
   const maxClientCount = clientEntries.length > 0 ? clientEntries[0][1] : 1;
-  const clientBarsHtml = clientEntries.map(([name, count]) => {
+  const clientBarsHtml = clientEntries.map(([name, count], idx) => {
     const pct = (count / maxClientCount) * 100;
+    const color = RPT_CLIENT_PALETTE[idx % RPT_CLIENT_PALETTE.length];
+    const showInside = pct > 20;
     return `<div class="rpt-hbar-row">
       <div class="rpt-hbar-label">${name}</div>
-      <div class="rpt-hbar-track"><div class="rpt-hbar-fill" style="width:${pct}%"></div></div>
-      <div class="rpt-hbar-count">${count}</div>
+      <div class="rpt-hbar-track">
+        <div class="rpt-hbar-fill" style="width:${pct}%;background:${color}">
+          ${showInside ? `<span class="rpt-hbar-fill-count">${count}</span>` : ''}
+        </div>
+        ${!showInside ? `<span class="rpt-hbar-count-outside">${count}</span>` : ''}
+      </div>
     </div>`;
   }).join('');
 
-  // --- 4. By Reason (Donut Chart) ---
+  // --- 4. By Reason (Donut Chart, bigger hole) ---
   const reasonCounts = {};
   all.forEach(ob => {
     const r = ob.reason || 'Unknown';
@@ -1881,20 +2024,19 @@ function renderReports() {
   });
   const reasonEntries = Object.entries(reasonCounts).sort((a, b) => b[1] - a[1]);
   const totalReasons = all.length;
-  const reasonColors = ['var(--accent)', 'var(--gold)', 'var(--green)', 'var(--blue)', 'var(--text-3)'];
 
   let conicParts = [];
   let cumPct = 0;
   reasonEntries.forEach(([reason, count], i) => {
     const pct = (count / totalReasons) * 100;
-    const color = reasonColors[i % reasonColors.length];
+    const color = RPT_DONUT_PALETTE[i % RPT_DONUT_PALETTE.length];
     conicParts.push(`${color} ${cumPct}% ${cumPct + pct}%`);
     cumPct += pct;
   });
   const conicGrad = `conic-gradient(${conicParts.join(', ')})`;
 
   const legendHtml = reasonEntries.map(([reason, count], i) => {
-    const color = reasonColors[i % reasonColors.length];
+    const color = RPT_DONUT_PALETTE[i % RPT_DONUT_PALETTE.length];
     return `<div class="rpt-legend-item">
       <div class="rpt-legend-dot" style="background:${color}"></div>
       <span>${reason}</span>
@@ -1902,13 +2044,13 @@ function renderReports() {
     </div>`;
   }).join('');
 
-  // --- 5. Average Duration by Step ---
+  // --- 5. Average Duration by Step (color-coded) ---
   const stepPairs = [
     { from: 'initiated', to: 'notified', label: 'Initiated \u2192 Notified' },
     { from: 'notified', to: 'callScheduled', label: 'Notified \u2192 Call Scheduled' },
-    { from: 'callScheduled', to: 'certSigned', label: 'Call Scheduled \u2192 Cert Signed' },
-    { from: 'certSigned', to: 'accessRevoked', label: 'Cert Signed \u2192 Access Revoked' },
-    { from: 'accessRevoked', to: 'payReleased', label: 'Access Revoked \u2192 Pay Released' }
+    { from: 'callScheduled', to: 'certSigned', label: 'Call \u2192 Cert Signed' },
+    { from: 'certSigned', to: 'accessRevoked', label: 'Cert \u2192 Access Revoked' },
+    { from: 'accessRevoked', to: 'payReleased', label: 'Access \u2192 Pay Released' }
   ];
 
   const stepAvgs = stepPairs.map(pair => {
@@ -1927,16 +2069,22 @@ function renderReports() {
   const maxStepAvg = Math.max(...stepAvgs.map(s => s.avg), 1);
 
   const stepBarsHtml = stepAvgs.map(s => {
-    const pct = (s.avg / maxStepAvg) * 100;
-    const colorClass = s.avg <= 1 ? 'green' : s.avg >= 4 ? '' : 'gold';
+    const pct = Math.max((s.avg / maxStepAvg) * 100, 2);
+    const color = stepDurationColor(s.avg);
+    const showInside = pct > 25;
+    const dayText = s.avg.toFixed(1) + 'd';
     return `<div class="rpt-hbar-row">
       <div class="rpt-hbar-label">${s.label}</div>
-      <div class="rpt-hbar-track"><div class="rpt-hbar-fill ${colorClass}" style="width:${pct}%"></div></div>
-      <div class="rpt-hbar-count">${s.avg.toFixed(1)}d</div>
+      <div class="rpt-hbar-track">
+        <div class="rpt-hbar-fill" style="width:${pct}%;background:${color}">
+          ${showInside ? `<span class="rpt-hbar-fill-count">${dayText}</span>` : ''}
+        </div>
+        ${!showInside ? `<span class="rpt-hbar-count-outside">${dayText}</span>` : ''}
+      </div>
     </div>`;
   }).join('');
 
-  // --- 6. Recent Offboardings Timeline ---
+  // --- 6. Recent Offboardings Timeline (compact) ---
   const recent = completed
     .map(ob => {
       const start = ob.createdAt;
@@ -1964,7 +2112,12 @@ function renderReports() {
     </div>`;
   }).join('');
 
-  // --- Assemble ---
+  // --- Print-only data tables ---
+  const printClientRows = clientEntries.map(([n, c]) => `<tr><td>${n}</td><td>${c}</td></tr>`).join('');
+  const printReasonRows = reasonEntries.map(([r, c]) => `<tr><td>${r}</td><td>${c}</td></tr>`).join('');
+  const printStepRows = stepAvgs.map(s => `<tr><td>${s.label}</td><td>${s.avg.toFixed(1)} days</td></tr>`).join('');
+
+  // --- Assemble (new layout) ---
   document.getElementById('reportsContent').innerHTML = `
     <div class="rpt-metrics">
       <div class="rpt-metric">
@@ -1976,7 +2129,7 @@ function renderReports() {
         <div class="rpt-metric-label">Avg Duration</div>
       </div>
       <div class="rpt-metric">
-        <div class="rpt-metric-num" style="font-size:18px;line-height:1.6">${topClient}</div>
+        <div class="rpt-metric-num" style="font-size:16px;line-height:1.8">${topClientDisplay}</div>
         <div class="rpt-metric-label">Most Active Client</div>
       </div>
       <div class="rpt-metric">
@@ -1987,7 +2140,7 @@ function renderReports() {
 
     <div class="rpt-section">
       <div class="rpt-section-label">Offboardings Per Month</div>
-      <div class="rpt-bar-chart">${barChartSvg}</div>
+      <div class="rpt-bar-chart"><div class="rpt-bar-chart-scroll">${barChartSvg}</div></div>
     </div>
 
     <div class="rpt-grid">
@@ -1999,7 +2152,7 @@ function renderReports() {
         <div class="rpt-section-label">By Reason</div>
         <div class="rpt-donut-wrap">
           <div class="rpt-donut" style="background:${conicGrad};border-radius:50%">
-            <div style="position:absolute;inset:25%;background:var(--bg-0);border-radius:50%"></div>
+            <div style="position:absolute;inset:20%;background:var(--bg-0);border-radius:50%"></div>
             <div class="rpt-donut-center">
               <div class="rpt-donut-center-num">${totalReasons}</div>
               <div class="rpt-donut-center-label">Total</div>
@@ -2011,7 +2164,7 @@ function renderReports() {
     </div>
 
     <div class="rpt-section rpt-step-bars">
-      <div class="rpt-section-label">Avg Duration by Step</div>
+      <div class="rpt-section-label">Step Duration Analysis</div>
       ${stepBarsHtml}
     </div>
 
@@ -2019,7 +2172,85 @@ function renderReports() {
       <div class="rpt-section-label">Recent Offboardings</div>
       <div class="rpt-timeline">${timelineHtml}</div>
     </div>
+
+    <div class="print-tables">
+      <div class="pt-label">Offboardings by Client</div>
+      <table><thead><tr><th>Client</th><th>Count</th></tr></thead><tbody>${printClientRows}</tbody></table>
+      <div class="pt-label">Offboardings by Reason</div>
+      <table><thead><tr><th>Reason</th><th>Count</th></tr></thead><tbody>${printReasonRows}</tbody></table>
+      <div class="pt-label">Average Step Durations</div>
+      <table><thead><tr><th>Step</th><th>Avg Duration</th></tr></thead><tbody>${printStepRows}</tbody></table>
+    </div>
   `;
+}
+
+// ===================================================================
+// REPORT EXPORTS
+// ===================================================================
+function exportReportCSV() {
+  const headers = ['ID','VA Name','Email','Phone','Client','Role','Status','Last Day','Final Pay','Reimbursements','Reason','Initiated By','Created','Completed','Duration (days)','Steps Completed','Total Steps'];
+  const rows = data.map(o => {
+    const endDate = o.steps.payReleased.date || '';
+    let dur = '';
+    if (o.createdAt && endDate) {
+      dur = Math.round((new Date(endDate + 'T00:00:00') - new Date(o.createdAt + 'T00:00:00')) / 86400000);
+    }
+    return [
+      o.id, o.vaName, o.vaEmail, o.vaPhone, o.client, o.role, o.status,
+      o.lastDay, o.finalPay, o.reimbursements || 0, o.reason, o.initiatedBy, o.createdAt,
+      endDate, dur, completedSteps(o.steps), STEP_ORDER.length
+    ];
+  });
+  const csv = [headers, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `offboarding_report_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportReportPDF() {
+  document.getElementById('printDate').textContent = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  window.print();
+}
+
+function exportDetailCSV(id) {
+  const ob = data.find(o => o.id === id);
+  if (!ob) return;
+
+  let csv = '';
+  csv += '"Field","Value"\n';
+  csv += `"Name","${ob.vaName}"\n`;
+  csv += `"Email","${ob.vaEmail}"\n`;
+  csv += `"Phone","${ob.vaPhone || 'N/A'}"\n`;
+  csv += `"Client","${ob.client}"\n`;
+  csv += `"Role","${ob.role}"\n`;
+  csv += `"Status","${ob.status}"\n`;
+  csv += `"Last Working Day","${ob.lastDay}"\n`;
+  csv += `"Final Pay","${ob.finalPay}"\n`;
+  csv += `"Reimbursements","${ob.reimbursements || 0}"\n`;
+  csv += `"Reason","${ob.reason || 'N/A'}"\n`;
+  csv += `"Initiated By","${ob.initiatedBy}"\n`;
+  csv += `"Created","${ob.createdAt}"\n`;
+  csv += `"Notes","${(ob.notes || '').replace(/"/g,'""')}"\n`;
+  csv += '\n"Tool","Status"\n';
+  ob.tools.forEach(t => {
+    csv += `"${t.name}","${t.revoked ? 'Revoked' : 'Active'}"\n`;
+  });
+  csv += '\n"Date","Action","By"\n';
+  ob.activity.forEach(a => {
+    csv += `"${fmtTimestamp(a.ts)}","${a.action.replace(/"/g,'""')}","${a.by}"\n`;
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const el = document.createElement('a');
+  el.href = url;
+  el.download = `offboarding_${ob.vaName.replace(/\s+/g,'_')}_${new Date().toISOString().split('T')[0]}.csv`;
+  el.click();
+  URL.revokeObjectURL(url);
 }
 
 // ===================================================================
